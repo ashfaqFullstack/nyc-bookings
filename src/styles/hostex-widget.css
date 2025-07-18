@@ -1,0 +1,136 @@
+/* Hostex Widget Custom Styling - Base styles only */
+
+/* General search widget container */
+.hostex-search-container {
+  position: relative;
+  z-index: 10;
+}
+
+/* Navbar specific widget styling */
+.hostex-navbar-widget {
+  position: relative;
+  z-index: 50;
+}
+
+/* Navbar widget - make it horizontal and compact */
+.hostex-navbar-widget hostex-search-widget {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Force horizontal layout for navbar */
+.hostex-navbar-widget hostex-search-widget .container,
+.hostex-navbar-widget hostex-search-widget .row {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+.hostex-navbar-widget hostex-search-widget .col,
+.hostex-navbar-widget hostex-search-widget .form-group {
+  flex: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+}
+
+.hostex-navbar-widget hostex-search-widget .col:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.hostex-navbar-widget hostex-search-widget .col:last-child {
+  flex: 0 0 auto !important;
+  padding: 4px !important;
+}
+
+/* Navbar input styling - minimal borders */
+.hostex-navbar-widget hostex-search-widget input,
+.hostex-navbar-widget hostex-search-widget select {
+  border: none !important;
+  background: transparent !important;
+  padding: 14px 16px !important;
+  font-size: 14px !important;
+  color: #374151 !important;
+  width: 100% !important;
+  outline: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.hostex-navbar-widget hostex-search-widget input::placeholder {
+  color: #6b7280 !important;
+  font-weight: 400 !important;
+}
+
+.hostex-navbar-widget hostex-search-widget input:focus,
+.hostex-navbar-widget hostex-search-widget select:focus {
+  background: #f9fafb !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+/* Navbar search button - circular */
+.hostex-navbar-widget hostex-search-widget button,
+.hostex-navbar-widget hostex-search-widget .btn {
+  background-color: #ef4444 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hostex-navbar-widget hostex-search-widget button:hover {
+  background-color: #dc2626 !important;
+  transform: scale(1.05) !important;
+}
+
+/* Hide unwanted elements */
+hostex-search-widget .advertisement,
+hostex-search-widget .powered-by,
+hostex-booking-widget .advertisement,
+hostex-booking-widget .powered-by {
+  display: none !important;
+}
+
+
+@media (max-width: 1024px) {
+  .hostex-navbar-widget {
+    display: block !important;
+  }
+
+  .hostex-navbar-widget hostex-search-widget .container,
+  .hostex-navbar-widget hostex-search-widget .row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .hostex-navbar-widget hostex-search-widget .col {
+    border-right: none !important;
+    padding: 8px 0 !important;
+  }
+
+  .hostex-navbar-widget hostex-search-widget .col:last-child {
+    display: flex !important;
+    justify-content: center !important;
+    padding: 8px 0 !important;
+  }
+
+  .hostex-navbar-widget hostex-search-widget button {
+    border-radius: 8px !important;
+    width: 100% !important;
+  }
+}
+
