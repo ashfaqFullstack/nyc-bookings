@@ -113,6 +113,7 @@ hostex-booking-widget .powered-by {
     overflow: hidden !important;
      height: 0px !important;
     width: 1px !important;
+    /* z-index: -1; */
    /* opacity: 0 !important; */
   }
 

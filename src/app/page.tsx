@@ -25,6 +25,26 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+   useEffect(() => {
+    // Simple check: if we have a referrer from the same site, refresh once
+    const hasRefreshed = sessionStorage.getItem('refreshed-home');
+    // const isFromSameSite = document.referrer && 
+    //                       new URL(document.referrer).origin === window.location.origin;
+    
+    if (!hasRefreshed) {
+      console.log('Refreshing home page for Hostex widget reset');
+      sessionStorage.setItem('refreshed-home', 'true');
+      window.location.reload();
+    }
+    
+    // Clean up on unmount
+    return () => {
+      sessionStorage.removeItem('refreshed-home');
+    };
+  }, []);
+
+  
+
   useEffect(() => {
     async function fetchProperties() {
       try {

@@ -236,6 +236,8 @@ import { SignupModal } from "@/components/auth/signup-modal";
 import { ForgotPasswordModal } from "@/components/auth/forgot-password-modal";
 import Script from "next/script";
 import '@/styles/hostex-widget.css';
+import { usePathname } from "next/navigation";
+
 
 export function Header() {
   const { user, isLoggedIn, logout } = useAuth();
@@ -243,6 +245,9 @@ export function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const pathname = usePathname();
+const isSearchPage = pathname === "/search";
+
 
   const handleSwitchToSignup = () => {
     setShowLoginModal(false);
@@ -280,13 +285,16 @@ export function Header() {
               <span className="hidden sm:inline">NewYorkCityBookings</span>
             </Link>
           </div>
+           {/* Hostex Search Widget - shown only if not on search page */}
+              {!isSearchPage && (
+                <div className="hidden lg:flex flex-1 justify-center hostex-navbar-widget">
+                  <hostex-search-widget
+                    result-url="/search"
+                    id="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0="
+                  />
+                </div>
+              )}
 
-          {/* Hostex Search Widget - Hidden on mobile */}
-          {/* <div className="!hidden lg:!block flex-1 justify-center"> */}
-            <div className="hidden lg:flex flex-1 justify-center hostex-navbar-widget">
-              <hostex-search-widget result-url="/" id="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=" />
-            </div>
-          {/* </div> */}
 
             {/* Desktop User Menu & Mobile Controls */}
             <div className="flex items-center space-x-2">

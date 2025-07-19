@@ -74,7 +74,7 @@ export default function SearchPage() {
         </div>
 
         {/* Hostex Search Results Widget */}
-        <div className="w-full">
+        <div className="w-full ">
           <hostex-search-result-widget
             id="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0="
           />
