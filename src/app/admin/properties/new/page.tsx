@@ -74,9 +74,9 @@ export default function NewProperty() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin/properties">
+          <div className="flex justify-between flex-col md:flex-row gap-4 md:gap-0 md:items-center py-6">
+            <div className="flex items-center md:space-x-4">
+              <Link className='hidden md:block'  href="/admin/properties">
                 <Button variant="outline" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Properties
@@ -87,17 +87,26 @@ export default function NewProperty() {
                 <p className="text-gray-600">Add a new property to your listings</p>
               </div>
             </div>
-            <Button onClick={saveProperty} disabled={saving} className="bg-rose-500 hover:bg-rose-600">
-              <Save className="w-4 h-4 mr-2" />
-              {saving ? 'Creating...' : 'Create Property'}
-            </Button>
+            <div className='flex flex-wrap gap-4 justify-between' >
+
+              <Link className='block md:hidden'  href="/admin/properties">
+                  <Button variant="outline" size="sm">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Properties
+                  </Button>
+                </Link>
+              <Button onClick={saveProperty} disabled={saving} className="bg-rose-500 hover:bg-rose-600">
+                <Save className="w-4 h-4 mr-2" />
+                {saving ? 'Creating...' : 'Create Property'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList>
+        <Tabs defaultValue="basic" className="space-y-6 ">
+          <TabsList className='flex md:block flex-wrap w-full h-fit' >
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="images">Images</TabsTrigger>

@@ -128,25 +128,33 @@ export default function AdminProperties() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
+          <div className="flex justify-between flex-col md:flex-row md:items-center py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
+              <Link className='hidden md:block' href="/admin">
                 <Button variant="outline" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Dashboard
                 </Button>
               </Link>
-              <div>
+              <div >
                 <h1 className="text-3xl font-bold text-gray-900">Property Management</h1>
                 <p className="text-gray-600">Manage all property listings</p>
               </div>
             </div>
-            <Link href="/admin/properties/new">
-              <Button className="bg-rose-500 hover:bg-rose-600">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Property
-              </Button>
-            </Link>
+            <div className='mt-4 flex justify-between flex-wrap gap-4'  >
+             <Link className='block md:hidden' href="/admin">
+                <Button variant="outline" >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Dashboard
+                </Button>
+              </Link>
+              <Link href="/admin/properties/new">
+                <Button className="bg-rose-500 hover:bg-rose-600">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Property
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -218,14 +226,14 @@ export default function AdminProperties() {
                               </Badge>
                             </div>
                           </div>
-                          <div className="mt-4 flex items-center justify-between">
+                          <div className="mt-4 flex flex-wrap justify-between">
                             <div className="flex items-center space-x-4 text-sm text-gray-600">
                               <span>{property.bedrooms} bed</span>
                               <span>{property.bathrooms} bath</span>
                               <span>{property.guests} guests</span>
                               <span>★ {property.rating} ({property.reviewCount})</span>
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center mt-1 md:mt-0 space-x-2">
                               <Button size="sm" variant="outline" onClick={() => router.push(`/admin/properties/${property.id}`)}>
                                 <Edit className="w-4 h-4 mr-1" />
                                 Edit
