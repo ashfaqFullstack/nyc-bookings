@@ -27,10 +27,10 @@ export default function SearchPage() {
   useEffect(() => {
     // Simple check: if we have a referrer from the same site, refresh once
     const hasRefreshed = sessionStorage.getItem('refreshed-search');
-    const isFromSameSite = document.referrer && 
-                          new URL(document.referrer).origin === window.location.origin;
+    // const isFromSameSite = document.referrer && 
+    //                       new URL(document.referrer).origin === window.location.origin;
     
-    if (isFromSameSite && !hasRefreshed) {
+    if (!hasRefreshed) {
       console.log('Refreshing search page for Hostex widget reset');
       sessionStorage.setItem('refreshed-search', 'true');
       window.location.reload();

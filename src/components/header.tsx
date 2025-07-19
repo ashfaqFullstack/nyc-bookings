@@ -270,7 +270,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -283,19 +283,11 @@ export function Header() {
 
           {/* Hostex Search Widget - Hidden on mobile */}
           {/* <div className="!hidden lg:!block flex-1 justify-center"> */}
-            {/* <div className="hidden lg:flex flex-1 justify-center hostex-navbar-widget">
+            <div className="hidden lg:flex flex-1 justify-center hostex-navbar-widget">
               <hostex-search-widget result-url="/" id="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=" />
-            </div> */}
+            </div>
           {/* </div> */}
 
-
-               <div className="flex-1 shadow-none">
-    <div className="relative hostex-navbar-widget shadow-none">
-     
-      <div className="absolute inset-0 shadow-none bg-gray-800/50 backdrop-blur supports-[backdrop-filter]:bg-gray-100/10 rounded-lg z-10 pointer-events-none lg:hidden"></div>
-      <hostex-search-widget result-url="/" id="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=" />
-    </div>
-  </div>
             {/* Desktop User Menu & Mobile Controls */}
             <div className="flex items-center space-x-2">
               {/* Mobile Search Button */}

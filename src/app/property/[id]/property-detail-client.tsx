@@ -105,10 +105,10 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   useEffect(() => {
     // Simple check: if we have a referrer from the same site, refresh once
     const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
-    const isFromSameSite = document.referrer && 
-                          new URL(document.referrer).origin === window.location.origin;
+    // const isFromSameSite = document.referrer && 
+    //                       new URL(document.referrer).origin === window.location.origin;
     
-    if (isFromSameSite && !hasRefreshed) {
+    if (!hasRefreshed) {
       sessionStorage.setItem(`refreshed-${id}`, 'true');
       window.location.reload();
     }

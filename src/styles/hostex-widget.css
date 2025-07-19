@@ -105,37 +105,15 @@ hostex-booking-widget .powered-by {
 }
 
 
-/* Force reset dropdown state */
-.hostex-navbar-widget {
-  position: relative;
-  z-index: 1;
-}
-
-/* Ensure dropdowns are properly positioned */
-hostex-search-widget {
-  display: block;
-  position: relative;
-}
-
-/* Reset any stuck dropdown states */
-hostex-search-widget * {
-  pointer-events: auto !important;
-}
-
-/* Force dropdown reinitialization */
-.hostex-dropdown {
-  display: none !important;
-}
-
-.hostex-dropdown.active {
-  display: block !important;
-}
-
 
 
 @media (max-width: 1024px) {
   .hostex-navbar-widget {
     display: block !important;
+    overflow: hidden !important;
+     height: 0px !important;
+    width: 1px !important;
+   /* opacity: 0 !important; */
   }
 
   .hostex-navbar-widget hostex-search-widget .container,
