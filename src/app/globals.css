@@ -94,7 +94,8 @@
 .leaflet-marker-pane,
 .leaflet-tooltip-pane,
 .leaflet-popup-pane,
-.leaflet-top {
+.leaflet-top,
+.leaflet-bottom {
   z-index: 10 !important;
 }
 /* 

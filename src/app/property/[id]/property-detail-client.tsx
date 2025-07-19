@@ -103,6 +103,23 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   useEffect(() => {
+    // Simple check: if we have a referrer from the same site, refresh once
+    const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
+    const isFromSameSite = document.referrer && 
+                          new URL(document.referrer).origin === window.location.origin;
+    
+    if (isFromSameSite && !hasRefreshed) {
+      sessionStorage.setItem(`refreshed-${id}`, 'true');
+      window.location.reload();
+    }
+    
+    // Clean up on unmount
+    return () => {
+      sessionStorage.removeItem(`refreshed-${id}`);
+    };
+  }, [id]);
+
+  useEffect(() => {
     async function fetchProperty() {
       try {
         const response = await fetch(`/api/properties/${id}`);
@@ -600,7 +617,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
 
       {/* Mobile Booking Widget Modal */}
       {showMobileBookingWidget && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex flex-col justify-end">
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-10 flex flex-col justify-end">
           <div
             ref={mobileBookingWidgetRef}
             className="bg-white rounded-t-xl w-full max-h-[90vh] overflow-y-auto"

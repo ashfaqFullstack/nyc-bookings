@@ -12,7 +12,7 @@ export const realProperties = [
       transitScore: 92
     },
     price: 250,
-    listing_id:"111292",
+    listing_id:"111286",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     rating: 4.8,
@@ -106,7 +106,7 @@ export const realProperties = [
     price: 250,
     rating: 4.9,
     reviewCount: 32,
-    listing_id:"111285",
+    listing_id:"111287",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [
@@ -206,7 +206,7 @@ export const realProperties = [
     price: 275,
     rating: 4.7,
     reviewCount: 28,
-    listing_id:"111283",
+    listing_id:"111288",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [
@@ -298,7 +298,7 @@ export const realProperties = [
     price: 275,
     rating: 4.8,
     reviewCount: 41,
-    listing_id:"111291",
+    listing_id:"111289",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [
@@ -449,7 +449,7 @@ export const realProperties = [
     price: 200,
     rating: 4.7,
     reviewCount: 29,
-    listing_id:"111289",
+    listing_id:"111291",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [
@@ -492,7 +492,7 @@ export const realProperties = [
     price: 275,
     rating: 4.9,
     reviewCount: 52,
-    listing_id:"111284",
+    listing_id:"111292",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [
@@ -651,7 +651,7 @@ export const realProperties = [
     price: 425,
     rating: 4.6,
     reviewCount: 43,
-    listing_id:"111287",
+    listing_id:"111284",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [
@@ -694,7 +694,7 @@ export const realProperties = [
     price: 275,
     rating: 4.8,
     reviewCount: 36,
-    listing_id:"111286",
+    listing_id:"111285",
     hostexwidgetid: "eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0=",
     scriptsrc: "https://hostex.io/app/assets/js/hostex-widget.js?version=20250714104930",
     images: [

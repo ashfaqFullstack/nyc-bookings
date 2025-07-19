@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Script from "next/script";
 import "@/styles/hostex-widget.css";
+import { useEffect } from "react";
 
 interface Property {
   id: string;
@@ -21,6 +22,25 @@ interface Property {
 }
 
 export default function SearchPage() {
+
+    // Add refresh logic
+  useEffect(() => {
+    // Simple check: if we have a referrer from the same site, refresh once
+    const hasRefreshed = sessionStorage.getItem('refreshed-search');
+    const isFromSameSite = document.referrer && 
+                          new URL(document.referrer).origin === window.location.origin;
+    
+    if (isFromSameSite && !hasRefreshed) {
+      console.log('Refreshing search page for Hostex widget reset');
+      sessionStorage.setItem('refreshed-search', 'true');
+      window.location.reload();
+    }
+    
+    // Clean up on unmount
+    return () => {
+      sessionStorage.removeItem('refreshed-search');
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
