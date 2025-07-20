@@ -7,7 +7,9 @@ import { Label } from '../ui/label';
 import { useRef, useState } from 'react';
 import { Badge } from '../ui/badge';
 import { useImageUpload } from '@/hooks/use-image-upload';
+import { useUserImageUpload } from '@/hooks/user-user-image-upload'; 
 import { Progress } from '@/components/ui/progress';
+
 
 
 interface Review {
@@ -291,58 +293,6 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
   );
 }
 
-// export function ImagesSection({ property, updateProperty }: SectionProps) {
-//   const [newImageUrl, setNewImageUrl] = useState('');
-
-//   const addImage = () => {
-//     if (newImageUrl.trim()) {
-//       updateProperty('images', [...property.images, newImageUrl.trim()]);
-//       setNewImageUrl('');
-//     }
-//   };
-
-//   const removeImage = (index: number) => {
-//     const newImages = property.images.filter((_, i) => i !== index);
-//     updateProperty('images', newImages);
-//   };
-
-//   return (
-//     <Card>
-//       <CardHeader>
-//         <CardTitle>Property Images</CardTitle>
-//         <CardDescription>Add and manage property photos</CardDescription>
-//       </CardHeader>
-//       <CardContent className="space-y-4">
-//         <div className="flex gap-2">
-//           <Input
-//             value={newImageUrl}
-//             onChange={(e) => setNewImageUrl(e.target.value)}
-//             placeholder="Enter image URL"
-//             onKeyPress={(e) => e.key === 'Enter' && addImage()}
-//           />
-//           <Button onClick={addImage} disabled={!newImageUrl.trim()}>
-//             <Plus className="w-4 h-4 mr-2" />
-//             Add
-//           </Button>
-//         </div>
-
-//         <div className="space-y-2">
-//           {property.images.map((image , index) => (
-//             <div key={image} className="flex items-center gap-2 p-2 border rounded">
-//               <img src={image} alt={`Property image`} className="w-16 h-16 object-cover rounded" />
-//               <span className="flex-1 text-sm text-gray-600 truncate">{image}</span>
-//               <Button variant="destructive" size="sm" onClick={() => removeImage(index)}>Remove</Button>
-//             </div>
-//           ))}
-//         </div>
-//       </CardContent>
-//     </Card>
-//   );
-// }
-
-// import { Progress } from '@/components/ui/progress';
-
-// ... other interfaces and components remain the same ...
 
 export function ImagesSection({ property, updateProperty }: SectionProps) {
   const [newImageUrl, setNewImageUrl] = useState('');
@@ -742,6 +692,15 @@ export function HouseRulesSection({ property, updateProperty }: SectionProps) {
   );
 }
 
+
+
+
+
+
+
+
+
+
 export function ReviewsSection({ property, updateProperty }: SectionProps) {
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [newReview, setNewReview] = useState<Omit<Review, 'id'>>({
@@ -751,6 +710,15 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
     date: new Date().toISOString().split('T')[0],
     comment: '',
   });
+  
+  const [uploadingUserImage, setUploadingUserImage] = useState<string | null>(null);
+  const { uploadUserImage, uploading: userImageUploading } = useUserImageUpload();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+
+
+
+
 
   const handleUpdateReview = (review: Review) => {
     const updatedReviews = property.reviews.map(r => r.id === review.id ? review : r);
@@ -758,17 +726,128 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
     setEditingReview(null);
   };
 
+
+
+
+
+
+
   const handleAddReview = () => {
+    if (!newReview.user.trim() || !newReview.comment.trim()) {
+      alert('Please fill in user name and comment');
+      return;
+    }
+    
     const reviewToAdd: Review = { ...newReview, id: `review_${Date.now()}` };
     const updatedReviews = [...property.reviews, reviewToAdd];
     updateProperty('reviews', updatedReviews);
-    setNewReview({ user: '', userImage: '', rating: 5, date: new Date().toISOString().split('T')[0], comment: '' });
+    setNewReview({ 
+      user: '', 
+      userImage: '', 
+      rating: 5, 
+      date: new Date().toISOString().split('T')[0], 
+      comment: '' 
+    });
   };
+
+
+
+
 
   const handleDeleteReview = (reviewId: string) => {
     const updatedReviews = property.reviews.filter(r => r.id !== reviewId);
     updateProperty('reviews', updatedReviews);
   };
+
+  const handleUserImageUpload = async (file: File, isEditing: boolean = false) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit for user images
+      alert('Image size must be less than 5MB');
+      return;
+    }
+
+    try {
+      setUploadingUserImage(isEditing ? 'editing' : 'new');
+      const result = await uploadUserImage(file);
+      
+      if (isEditing && editingReview) {
+        setEditingReview(prev => prev ? { ...prev, userImage: result.url } : null);
+      } else {
+        setNewReview(prev => ({ ...prev, userImage: result.url }));
+      }
+    } catch (error) {
+      console.error('Failed to upload user image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploadingUserImage(null);
+    }
+  };
+
+  const UserImageUploadSection = ({ 
+    imageUrl, 
+    onImageChange, 
+    isEditing = false 
+  }: { 
+    imageUrl: string; 
+    onImageChange: (url: string) => void;
+    isEditing?: boolean;
+  }) => (
+    <div className="space-y-2">
+      <Label>User Image</Label>
+      <div className="flex items-center gap-4">
+        {imageUrl && (
+          <div className="relative">
+            <img 
+              src={imageUrl} 
+              alt="User avatar" 
+              className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+            />
+          </div>
+        )}
+        
+        <div className="flex-1 space-y-2">
+          <div className="flex gap-2">
+            {/* <Input
+              placeholder="User Image URL"
+              value={imageUrl}
+              onChange={(e) => onImageChange(e.target.value)}
+              className="flex-1"
+            /> */}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingUserImage === (isEditing ? 'editing' : 'new')}
+            >
+              <Upload className="w-4 h-4 mr-1" />
+              {uploadingUserImage === (isEditing ? 'editing' : 'new') ? 'Uploading...' : 'Upload'}
+            </Button>
+          </div>
+          
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                handleUserImageUpload(file, isEditing);
+              }
+            }}
+            className="hidden"
+          />
+          
+          <p className="text-xs text-gray-500">
+            Upload an image or paste a URL. Max 5MB.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <Card>
@@ -780,49 +859,167 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
         {/* Form for adding a new review */}
         <div className="border p-4 rounded-lg space-y-4">
           <h3 className="font-semibold">Add New Review</h3>
-          <Input placeholder="User Name" value={newReview.user} onChange={e => setNewReview(prev => ({ ...prev, user: e.target.value }))} />
-          <Input placeholder="User Image URL" value={newReview.userImage} onChange={e => setNewReview(prev => ({ ...prev, userImage: e.target.value }))} />
-          <Input type="number" placeholder="Rating" value={newReview.rating} onChange={e => setNewReview(prev => ({ ...prev, rating: Number(e.target.value) }))} />
-          <Input type="date" value={newReview.date} onChange={e => setNewReview(prev => ({ ...prev, date: e.target.value }))} />
-          <Textarea placeholder="Comment" value={newReview.comment} onChange={e => setNewReview(prev => ({ ...prev, comment: e.target.value }))} />
-          <Button onClick={handleAddReview}>Add Review</Button>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label>User Name</Label>
+              <Input 
+                placeholder="User Name" 
+                value={newReview.user} 
+                onChange={e => setNewReview(prev => ({ ...prev, user: e.target.value }))} 
+              />
+            </div>
+            
+            <div>
+              <Label>Rating</Label>
+              <Input 
+                type="number" 
+                min="1" 
+                max="5" 
+                placeholder="Rating (1-5)" 
+                value={newReview.rating} 
+                onChange={e => setNewReview(prev => ({ ...prev, rating: Number(e.target.value) }))} 
+              />
+            </div>
+          </div>
+
+
+          <div>
+            <Label>Date</Label>
+            <Input 
+              type="date" 
+              value={newReview.date} 
+              onChange={e => setNewReview(prev => ({ ...prev, date: e.target.value }))} 
+            />
+          </div>
+          
+          <div>
+            <Label>Comment</Label>
+            <Textarea 
+              placeholder="Review comment" 
+              value={newReview.comment} 
+              onChange={e => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
+              rows={3}
+            />
+          </div>
+          
+          <UserImageUploadSection
+            imageUrl={newReview.userImage}
+            onImageChange={(url) => setNewReview(prev => ({ ...prev, userImage: url }))}
+            isEditing={false}
+          />
+          
+          <Button onClick={handleAddReview} disabled={!newReview.user.trim() || !newReview.comment.trim()}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Review
+          </Button>
         </div>
 
         {/* List of existing reviews */}
         <div className="space-y-4">
+          <Label className="text-sm font-medium text-gray-700">
+            Existing Reviews ({property.reviews?.length || 0})
+          </Label>
+          
           {property.reviews && property.reviews.length > 0 ? (
             property.reviews.map((review: Review) => (
-              <div key={review.id} className="border rounded p-4 space-y-4">
+              <div key={review.id} className="border rounded-lg p-4 space-y-4">
                 {editingReview?.id === review.id ? (
-                  <div className="space-y-2">
-                    <Input value={editingReview.user} onChange={e => setEditingReview(prev => prev ? { ...prev, user: e.target.value } : null)} />
-                    <Input value={editingReview.userImage} onChange={e => setEditingReview(prev => prev ? { ...prev, userImage: e.target.value } : null)} />
-                    <Input type="number" value={editingReview.rating} onChange={e => setEditingReview(prev => prev ? { ...prev, rating: Number(e.target.value) } : null)} />
-                    <Input type="date" value={editingReview.date} onChange={e => setEditingReview(prev => prev ? { ...prev, date: e.target.value } : null)} />
-                    <Textarea value={editingReview.comment} onChange={e => setEditingReview(prev => prev ? { ...prev, comment: e.target.value } : null)} />
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>User Name</Label>
+                        <Input 
+                          value={editingReview.user} 
+                          onChange={e => setEditingReview(prev => prev ? { ...prev, user: e.target.value } : null)} 
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label>Rating</Label>
+                        <Input 
+                          type="number" 
+                          min="1" 
+                          max="5" 
+                          value={editingReview.rating} 
+                          onChange={e => setEditingReview(prev => prev ? { ...prev, rating: Number(e.target.value) } : null)} 
+                        />
+                      </div>
+                    </div>
+
+                    <UserImageUploadSection
+                      imageUrl={editingReview.userImage}
+                      onImageChange={(url) => setEditingReview(prev => prev ? { ...prev, userImage: url } : null)}
+                      isEditing={true}
+                    />
+
+                    <div>
+                      <Label>Date</Label>
+                      <Input 
+                        type="date" 
+                        value={editingReview.date} 
+                        onChange={e => setEditingReview(prev => prev ? { ...prev, date: e.target.value } : null)} 
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Comment</Label>
+                      <Textarea 
+                        value={editingReview.comment} 
+                        onChange={e => setEditingReview(prev => prev ? { ...prev, comment: e.target.value } : null)}
+                        rows={3}
+                      />
+                    </div>
+                    
                     <div className="flex gap-2">
-                      <Button onClick={() => handleUpdateReview(editingReview)}>Save</Button>
-                      <Button variant="ghost" onClick={() => setEditingReview(null)}>Cancel</Button>
+                      <Button onClick={() => handleUpdateReview(editingReview)}>
+                        Save Changes
+                      </Button>
+                      <Button variant="ghost" onClick={() => setEditingReview(null)}>
+                        Cancel
+                      </Button>
                     </div>
                   </div>
                 ) : (
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium">{review.user}</span>
-                      <span className="text-yellow-500">★ {review.rating}</span>
-                      <span className="text-gray-500 text-sm">{review.date}</span>
+                    <div className="flex items-start gap-4 mb-3">
+                      {review.userImage && (
+                        <img 
+                          src={review.userImage} 
+                          alt={review.user}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium">{review.user}</span>
+                          <div className="flex items-center">
+                            <span className="text-yellow-500">★</span>
+                            <span className="ml-1">{review.rating}</span>
+                          </div>
+                          <span className="text-gray-500 text-sm">{review.date}</span>
+                        </div>
+                        <p className="text-gray-700">{review.comment}</p>
+                      </div>
                     </div>
-                    <p className="text-gray-700">{review.comment}</p>
-                    <div className="flex gap-2 mt-2">
-                      <Button variant="outline" size="sm" onClick={() => setEditingReview(review)}>Edit</Button>
-                      <Button variant="destructive" size="sm" onClick={() => handleDeleteReview(review.id)}>Delete</Button>
+                    
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setEditingReview(review)}>
+                        Edit
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={() => handleDeleteReview(review.id)}>
+                        Delete
+                      </Button>
                     </div>
                   </div>
                 )}
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No reviews yet</p>
+            <div className="text-center py-8 text-gray-500">
+              <Users className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+              <p>No reviews yet</p>
+            </div>
           )}
         </div>
       </CardContent>

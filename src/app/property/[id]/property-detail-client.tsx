@@ -42,8 +42,8 @@ interface PropertyDetailClientProps {
   id: string;
 }
 
+// ... other imports and interfaces remain the same ...
 
-// import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -53,39 +53,213 @@ interface PropertyMapProps {
 
 export function PropertyMap({ coordinates }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const leafletMapRef = useRef<L.Map | null>(null); // Store Leaflet instance
+  const leafletMapRef = useRef<L.Map | null>(null);
+  const circleRef = useRef<L.Circle | null>(null);
+  const markerRef = useRef<L.Marker | null>(null);
+
+  // Create custom home icon
+  const createHomeIcon = () => {
+    const homeIconSvg = `
+      <div style="
+        width: 40px;
+        height: 40px;
+        background-color: #ef4444;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      ">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9,22 9,12 15,12 15,22"/>
+        </svg>
+      </div>
+    `;
+
+    return L.divIcon({
+      html: homeIconSvg,
+      className: 'custom-home-icon',
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      popupAnchor: [0, -20],
+    });
+  };
+
+  // Calculate radius based on zoom level
+  const getRadiusForZoom = (zoom: number): number => {
+    const baseRadius = 800; // 800 meters at zoom level 13
+    const baseZoom = 13;
+    const zoomDiff = zoom - baseZoom;
+    const radius = baseRadius / Math.pow(1.4, zoomDiff);
+    return Math.max(200, Math.min(3000, radius));
+  };
 
   useEffect(() => {
     if (mapRef.current && !leafletMapRef.current) {
-      leafletMapRef.current = L.map(mapRef.current).setView(
-        [coordinates.lat, coordinates.lng],
-        13
-      );
+      // Initialize map
+      leafletMapRef.current = L.map(mapRef.current, {
+        zoomControl: true,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        touchZoom: true,
+      }).setView([coordinates.lat, coordinates.lng], 13);
 
+      // Add tile layer
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18,
       }).addTo(leafletMapRef.current);
 
-      const customIcon = L.icon({
-        iconUrl: '/marker-icon.png', 
-        iconSize: [40, 40], 
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
-        shadowUrl: undefined,
+      // Create and add circle
+      const initialRadius = getRadiusForZoom(13);
+      const circle = L.circle([coordinates.lat, coordinates.lng], {
+        color: '#ef4444',
+        fillColor: '#ef4444',
+        fillOpacity: 0.15,
+        radius: initialRadius,
+        weight: 2,
+        opacity: 0.8,
+      }).addTo(leafletMapRef.current);
+
+      circleRef.current = circle;
+
+      // Create and add home icon marker
+      const homeIcon = createHomeIcon();
+      const marker = L.marker([coordinates.lat, coordinates.lng], { 
+        icon: homeIcon,
+        interactive: false, // Make it non-interactive for better UX
+      }).addTo(leafletMapRef.current);
+
+      markerRef.current = marker;
+
+      // Handle zoom events to update circle radius
+      leafletMapRef.current.on('zoom', () => {
+        if (circleRef.current) {
+          const newRadius = getRadiusForZoom(leafletMapRef.current!.getZoom());
+          circleRef.current.setRadius(newRadius);
+        }
       });
 
-      L.marker([coordinates.lat, coordinates.lng], { icon: customIcon }).addTo(leafletMapRef.current);
+      // Add popup with property info
+      const popupContent = `
+        <div style="text-align: center; padding: 8px;">
+          <div style="font-weight: bold; margin-bottom: 4px;">Property Location</div>
+          <div style="font-size: 12px; color: #666;">
+            Approximate area - exact location provided after booking
+          </div>
+        </div>
+      `;
+      
+      marker.bindPopup(popupContent, {
+        offset: [0, -10],
+        className: 'custom-popup'
+      });
+    }
+
+    // Update positions if coordinates change
+    if (leafletMapRef.current && circleRef.current && markerRef.current) {
+      const newLatLng = L.latLng(coordinates.lat, coordinates.lng);
+      circleRef.current.setLatLng(newLatLng);
+      markerRef.current.setLatLng(newLatLng);
+      leafletMapRef.current.setView(newLatLng, leafletMapRef.current.getZoom());
     }
   }, [coordinates]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (leafletMapRef.current) {
+        leafletMapRef.current.remove();
+        leafletMapRef.current = null;
+      }
+    };
+  }, []);
+
   return (
-    <div
-      ref={mapRef}
-      style={{ height: "100%", width: "100%" }}
-      className="rounded-lg"
-    />
+    <>
+      <div
+        ref={mapRef}
+        style={{ height: "100%", width: "100%" }}
+        className="rounded-lg relative"
+      />
+      
+      {/* Add custom CSS for the popup */}
+      <style jsx global>{`
+        .custom-home-icon {
+          background: none !important;
+          border: none !important;
+        }
+        
+        .custom-popup .leaflet-popup-content-wrapper {
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .custom-popup .leaflet-popup-content {
+          margin: 0;
+          font-family: inherit;
+        }
+        
+        .custom-popup .leaflet-popup-tip {
+          background: white;
+        }
+        
+        .leaflet-container {
+          font-family: inherit;
+        }
+      `}</style>
+    </>
   );
 }
+
+// ... rest of the component remains the same ...
+
+
+// import { useEffect, useRef } from "react";
+// import L from "leaflet";
+// import "leaflet/dist/leaflet.css";
+
+// interface PropertyMapProps {
+//   coordinates: { lat: number; lng: number };
+// }
+
+// export function PropertyMap({ coordinates }: PropertyMapProps) {
+//   const mapRef = useRef<HTMLDivElement | null>(null);
+//   const leafletMapRef = useRef<L.Map | null>(null); // Store Leaflet instance
+
+//   useEffect(() => {
+//     if (mapRef.current && !leafletMapRef.current) {
+//       leafletMapRef.current = L.map(mapRef.current).setView(
+//         [coordinates.lat, coordinates.lng],
+//         13
+//       );
+
+//       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+//         attribution: '&copy; OpenStreetMap contributors',
+//       }).addTo(leafletMapRef.current);
+
+//       const customIcon = L.icon({
+//         iconUrl: '/marker-icon.png', 
+//         iconSize: [40, 40], 
+//         iconAnchor: [16, 32],
+//         popupAnchor: [0, -32],
+//         shadowUrl: undefined,
+//       });
+
+//       L.marker([coordinates.lat, coordinates.lng], { icon: customIcon }).addTo(leafletMapRef.current);
+//     }
+//   }, [coordinates]);
+
+//   return (
+//     <div
+//       ref={mapRef}
+//       style={{ height: "100%", width: "100%" }}
+//       className="rounded-lg"
+//     />
+//   );
+// }
 
 export default function PropertyDetailClient({ id }: PropertyDetailClientProps) {
   const [property, setProperty] = useState<Property | null>(null);
@@ -103,21 +277,15 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   useEffect(() => {
-    // Simple check: if we have a referrer from the same site, refresh once
-    const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
-    // const isFromSameSite = document.referrer && 
-    //                       new URL(document.referrer).origin === window.location.origin;
-    
-    if (!hasRefreshed) {
-      sessionStorage.setItem(`refreshed-${id}`, 'true');
-      window.location.reload();
-    }
-    
-    // Clean up on unmount
-    return () => {
-      sessionStorage.removeItem(`refreshed-${id}`);
-    };
-  }, [id]);
+  const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
+  if (!hasRefreshed && typeof window !== 'undefined') {
+    sessionStorage.setItem(`refreshed-${id}`, 'true');
+    setTimeout(() => window.location.reload(), 100); // delay prevents SSR bugs
+  }
+  return () => {
+    sessionStorage.removeItem(`refreshed-${id}`);
+  };
+}, [id]);
 
   useEffect(() => {
     async function fetchProperty() {
@@ -157,28 +325,28 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   }, [showMobileBookingWidget]);
 
   // Close mobile booking widget when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        mobileBookingWidgetRef.current &&
-        !mobileBookingWidgetRef.current.contains(event.target as Node) &&
-        showMobileBookingWidget
-      ) {
-        // Don't close if clicked on the booking widget itself
-        const target = event.target as HTMLElement;
-        if (
-          target.closest('hostex-booking-widget') ||
-          target.tagName.toLowerCase().includes('hostex')
-        ) {
-          return;
-        }
-        setShowMobileBookingWidget(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       mobileBookingWidgetRef.current &&
+  //       !mobileBookingWidgetRef.current.contains(event.target as Node) &&
+  //       showMobileBookingWidget
+  //     ) {
+  //       // Don't close if clicked on the booking widget itself
+  //       const target = event.target as HTMLElement;
+  //       if (
+  //         target.closest('hostex-booking-widget') ||
+  //         target.tagName.toLowerCase().includes('hostex')
+  //       ) {
+  //         return;
+  //       }
+  //       setShowMobileBookingWidget(false);
+  //     }
+  //   };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showMobileBookingWidget]);
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, [showMobileBookingWidget]);
 
   if (loading) {
     return (
