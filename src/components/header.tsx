@@ -87,7 +87,7 @@ const isHome = pathname === "/";
             </Link>
           </div>
            {/* Hostex Search Widget - shown only if not on search page */}
-              {(!isSearchPage && !isHome && !isDesktop)  && (
+              {(!isSearchPage && !isHome && (!isDesktop || !isProperty))  && (
                 <div className="flex flex-1 justify-center hostex-navbar-widget">
                   <hostex-search-widget
                     result-url="/search"
