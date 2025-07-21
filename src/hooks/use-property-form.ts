@@ -176,7 +176,7 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
         cancellationPolicy: property.cancellationPolicy,
         neighborhoodInfo: property.neighborhoodInfo,
         coordinates: property.coordinates,
-        hostexwidgetid:property.hostexwidgetid,
+        hoxtexwidgetid:property.hostexwidgetid,
         scriptsrc: property.scriptsrc,
         listing_id:property.listing_id,
         reviews: property.reviews

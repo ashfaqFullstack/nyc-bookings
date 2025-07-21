@@ -31,6 +31,7 @@ export function Header() {
   const pathname = usePathname();
 const isSearchPage = pathname === "/search";
 const isProperty = pathname.includes("/property/");
+const isHome = pathname === "/";
  const [isDesktop, setIsDesktop] = useState(false); // Default to false, will be updated on mount
 
   useEffect(() => {
@@ -86,7 +87,7 @@ const isProperty = pathname.includes("/property/");
             </Link>
           </div>
            {/* Hostex Search Widget - shown only if not on search page */}
-              {(!isSearchPage && (!isDesktop || !isProperty))  && (
+              {(!isSearchPage && !isHome && !isDesktop)  && (
                 <div className="flex flex-1 justify-center hostex-navbar-widget">
                   <hostex-search-widget
                     result-url="/search"
@@ -99,7 +100,7 @@ const isProperty = pathname.includes("/property/");
             {/* Desktop User Menu & Mobile Controls */}
             <div className="flex items-center space-x-2">
               {/* Mobile Search Button */}
-              <div className="lg:hidden">
+              <div>
                 <Button
                   variant="ghost"
                   size="icon"

@@ -90,18 +90,26 @@ export function HeroCarousel() {
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-md">
             Find and book your perfect New York City vacation rental with our integrated booking system.
           </p>
-          <div className="mt-8 flex justify-center">
-            <Link href="/search" className="w-full sm:w-auto">
+          <div className="relative mt-8 flex justify-center z-[10000]">
+            {/* <Link href="/search" className="w-full sm:w-auto">
               <button className="w-full sm:w-auto bg-white text-blue-600 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105">
                 Explore Properties
               </button>
-            </Link>
+            </Link> */}
+            <div className="absolute w-[95%] lg:w-[70%] mx-auto" >
+               <div className="flex flex-1 justify-center hostex-search-home-widget">
+                  <hostex-search-widget
+                    result-url="/search"
+                    id="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0="
+                  />
+                </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
         {heroImages.map((image, index) => (
           <button
             key={index}

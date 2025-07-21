@@ -7,20 +7,24 @@
 }
 
 /* Navbar specific widget styling */
-.hostex-navbar-widget {
+.hostex-navbar-widget,
+.hostex-search-home-widget {
   position: relative;
   z-index: 50;
 }
 
 /* Navbar widget - make it horizontal and compact */
-.hostex-navbar-widget hostex-search-widget {
+.hostex-navbar-widget hostex-search-widget,
+.hostex-search-home-widget hostex-search-widget {
   display: block !important;
   width: 100% !important;
 }
 
 /* Force horizontal layout for navbar */
 .hostex-navbar-widget hostex-search-widget .container,
-.hostex-navbar-widget hostex-search-widget .row {
+.hostex-navbar-widget hostex-search-widget .row,
+.hostex-search-home-widget hostex-search-widget .container,
+.hostex-search-home-widget hostex-search-widget .row {
   width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -30,25 +34,31 @@
 }
 
 .hostex-navbar-widget hostex-search-widget .col,
-.hostex-navbar-widget hostex-search-widget .form-group {
+.hostex-navbar-widget hostex-search-widget .form-group,
+.hostex-search-home-widget hostex-search-widget .col,
+.hostex-search-home-widget hostex-search-widget .form-group {
   flex: 1 !important;
   margin: 0 !important;
   padding: 0 !important;
   position: relative !important;
 }
 
-.hostex-navbar-widget hostex-search-widget .col:not(:last-child) {
+.hostex-navbar-widget hostex-search-widget .col:not(:last-child),
+.hostex-search-home-widget hostex-search-widget .col:not(:last-child) {
   border-right: 1px solid #e5e7eb;
 }
 
-.hostex-navbar-widget hostex-search-widget .col:last-child {
+.hostex-navbar-widget hostex-search-widget .col:last-child,
+.hostex-search-home-widget hostex-search-widget .col:last-child {
   flex: 0 0 auto !important;
   padding: 4px !important;
 }
 
 /* Navbar input styling - minimal borders */
 .hostex-navbar-widget hostex-search-widget input,
-.hostex-navbar-widget hostex-search-widget select {
+.hostex-navbar-widget hostex-search-widget select,
+.hostex-search-home-widget hostex-search-widget input,
+.hostex-search-home-widget hostex-search-widget select {
   border: none !important;
   background: transparent !important;
   padding: 14px 16px !important;
@@ -60,13 +70,16 @@
   box-shadow: none !important;
 }
 
-.hostex-navbar-widget hostex-search-widget input::placeholder {
+.hostex-navbar-widget hostex-search-widget input::placeholder,
+.hostex-search-home-widget hostex-search-widget input::placeholder {
   color: #6b7280 !important;
   font-weight: 400 !important;
 }
 
 .hostex-navbar-widget hostex-search-widget input:focus,
-.hostex-navbar-widget hostex-search-widget select:focus {
+.hostex-navbar-widget hostex-search-widget select:focus,
+.hostex-search-home-widget hostex-search-widget input:focus,
+.hostex-search-home-widget hostex-search-widget select:focus {
   background: #f9fafb !important;
   border-radius: 8px !important;
   box-shadow: none !important;
@@ -74,7 +87,9 @@
 
 /* Navbar search button - circular */
 .hostex-navbar-widget hostex-search-widget button,
-.hostex-navbar-widget hostex-search-widget .btn {
+.hostex-navbar-widget hostex-search-widget .btn,
+.hostex-search-home-widget hostex-search-widget button,
+.hostex-search-home-widget hostex-search-widget .btn {
   background-color: #ef4444 !important;
   color: white !important;
   border: none !important;
@@ -91,7 +106,8 @@
   margin: 0 !important;
 }
 
-.hostex-navbar-widget hostex-search-widget button:hover {
+.hostex-navbar-widget hostex-search-widget button:hover,
+.hostex-search-home-widget hostex-search-widget button:hover {
   background-color: #dc2626 !important;
   transform: scale(1.05) !important;
 }
@@ -104,55 +120,50 @@ hostex-booking-widget .powered-by {
   display: none !important;
 }
 
-
-
-
 @media (max-width: 1024px) {
   .hostex-navbar-widget {
     display: block !important;
     overflow: hidden !important;
-     height: 0px !important;
+    height: 0px !important;
     position: absolute !important;
     bottom: 0 !important;
     inset: 0px !important;
-    /* bottom: -800px !important;  */
     top: 700% !important;
     z-index: 9999 !important;
     width: 1px !important;
-  } 
-
-   /* .hostex-navbar-widget {
-    visibility: hidden !important;
-    pointer-events: none !important;
-    position: absolute !important;
-    top: -9999px !important;
-    left: -9999px !important;
-    width: auto !important;
+  }
+  .hostex-search-home-widget{
+    display: block !important;
+    overflow: hidden !important;
     height: auto !important;
-  } */
+    width: 100% !important;
+  }
+
   .hostex-navbar-widget hostex-search-widget .container,
-  .hostex-navbar-widget hostex-search-widget .row {
+  .hostex-navbar-widget hostex-search-widget .row,
+  .hostex-search-home-widget hostex-search-widget .container,
+  .hostex-search-home-widget hostex-search-widget .row {
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 8px !important;
   }
 
-  .hostex-navbar-widget hostex-search-widget .col {
+  .hostex-navbar-widget hostex-search-widget .col,
+  .hostex-search-home-widget hostex-search-widget .col {
     border-right: none !important;
     padding: 8px 0 !important;
   }
 
-  .hostex-navbar-widget hostex-search-widget .col:last-child {
+  .hostex-navbar-widget hostex-search-widget .col:last-child,
+  .hostex-search-home-widget hostex-search-widget .col:last-child {
     display: flex !important;
     justify-content: center !important;
     padding: 8px 0 !important;
   }
 
-  .hostex-navbar-widget hostex-search-widget button {
+  .hostex-navbar-widget hostex-search-widget button,
+  .hostex-search-home-widget hostex-search-widget button {
     border-radius: 8px !important;
     width: 100% !important;
   }
-
-
 }
-
