@@ -9,6 +9,8 @@ import { Badge } from '../ui/badge';
 import { useImageUpload } from '@/hooks/use-image-upload';
 import { useUserImageUpload } from '@/hooks/user-user-image-upload'; 
 import { Progress } from '@/components/ui/progress';
+import { ImageUploadComponent } from './imageUpload';
+import { useHostImageUpload } from '@/hooks/useHostImageUpload';
 
 
 
@@ -152,8 +154,9 @@ export function BasicInfoSection({ property, updateProperty }: SectionProps) {
     </Card>
   );
 }
-
 export function PropertyDetailsSection({ property, updateProperty }: SectionProps) {
+  const { uploadHostImage, uploading: hostImageUploading } = useHostImageUpload();
+  
   return (
     <Card>
       <CardHeader>
@@ -215,15 +218,6 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
             />
           </div>
           <div>
-            <Label htmlFor="hostImage">Host Image URL</Label>
-            <Input
-              id="hostImage"
-              value={property.hostImage}
-              onChange={(e) => updateProperty('hostImage', e.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-          <div>
             <Label htmlFor="hostJoinedDate">Host Joined Year</Label>
             <Input
               id="hostJoinedDate"
@@ -232,10 +226,19 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               placeholder="2024"
             />
           </div>
+          <div>
+            <ImageUploadComponent
+              imageUrl={property.hostImage}
+              onImageChange={(url) => updateProperty('hostImage', url)}
+              label="Host Image"
+              uploading={hostImageUploading}
+              onUpload={uploadHostImage}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-           <div>
+          <div>
             <Label htmlFor="listing_id">Hostex Listing Id</Label>
             <Input
               id="listing_id"
@@ -262,9 +265,7 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               placeholder="https://hostex.io/............"
             />
           </div>
-          
         </div>
-
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -285,9 +286,7 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               placeholder="11:00 AM"
             />
           </div>
-          
         </div>
-        
       </CardContent>
     </Card>
   );
@@ -693,14 +692,6 @@ export function HouseRulesSection({ property, updateProperty }: SectionProps) {
 }
 
 
-
-
-
-
-
-
-
-
 export function ReviewsSection({ property, updateProperty }: SectionProps) {
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [newReview, setNewReview] = useState<Omit<Review, 'id'>>({
@@ -715,22 +706,11 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
   const { uploadUserImage, uploading: userImageUploading } = useUserImageUpload();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-
-
-
-
-
   const handleUpdateReview = (review: Review) => {
     const updatedReviews = property.reviews.map(r => r.id === review.id ? review : r);
     updateProperty('reviews', updatedReviews);
     setEditingReview(null);
   };
-
-
-
-
-
-
 
   const handleAddReview = () => {
     if (!newReview.user.trim() || !newReview.comment.trim()) {
@@ -749,10 +729,6 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
       comment: '' 
     });
   };
-
-
-
-
 
   const handleDeleteReview = (reviewId: string) => {
     const updatedReviews = property.reviews.filter(r => r.id !== reviewId);
@@ -810,12 +786,6 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
         
         <div className="flex-1 space-y-2">
           <div className="flex gap-2">
-            {/* <Input
-              placeholder="User Image URL"
-              value={imageUrl}
-              onChange={(e) => onImageChange(e.target.value)}
-              className="flex-1"
-            /> */}
             <Button
               type="button"
               variant="outline"

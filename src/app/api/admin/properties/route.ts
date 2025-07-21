@@ -90,11 +90,11 @@ export async function POST(request: NextRequest) {
     const id = body.id || `prop_${Date.now()}`;
 
     // Validation
-    if (!title || !location || !neighborhood || !price || !images || !host ||
-        !description || !bedrooms || !bathrooms || !beds || !guests || !checkIn ||
-        !checkOut || !coordinates || !neighborhoodInfo) {
-      return createAdminResponse('Missing required fields', 400);
-    }
+    // if (!title || !location || !neighborhood || !price || !images || !host ||
+    //     !description || !bedrooms || !bathrooms || !beds || !guests || !checkIn ||
+    //     !checkOut || !coordinates || !neighborhoodInfo) {
+    //   return createAdminResponse('Missing required fields', 400);
+    // }
 
     const result = await sql`
       INSERT INTO properties (
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         bedrooms, bathrooms, beds, guests, checkin, checkout, houserules,
         cancellationpolicy, coordinates, neighborhoodinfo, reviews, hostexwidgetid, scriptsrc, listing_id,createdat
       ) VALUES (
-        ${id}, ${title}, ${location}, ${address}, ${neighborhood}, ${price}, ${rating}, ${reviewCount},
+        ${id}, ${title}, ${location}, ${location}, ${neighborhood}, ${price}, ${rating}, ${reviewCount},
         ${images}, ${host}, ${hostImage || ''}, ${hostJoinedDate || new Date().getFullYear().toString()},
         ${amenities}, ${description}, ${bedrooms}, ${bathrooms}, ${beds}, ${guests},
         ${checkIn}, ${checkOut}, ${houseRules || []}, ${cancellationPolicy || ''},
