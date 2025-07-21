@@ -176,11 +176,13 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
         cancellationPolicy: property.cancellationPolicy,
         neighborhoodInfo: property.neighborhoodInfo,
         coordinates: property.coordinates,
-        hoxtexwidgetid:property.hostexwidgetid,
+        hostexwidgetid:property.hostexwidgetid,
         scriptsrc: property.scriptsrc,
         listing_id:property.listing_id,
         reviews: property.reviews
       };
+
+      
 
       const url = isEditing ? `/api/admin/properties/${property.id}` : '/api/admin/properties';
       const method = isEditing ? 'PUT' : 'POST';

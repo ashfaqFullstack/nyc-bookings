@@ -140,19 +140,26 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     // Different transformations based on folder
-    const getTransformation = (folder: string) => {
-      if (folder === 'user-avatars') {
-        return [
-          { width: 200, height: 200, crop: 'fill', gravity: 'face', quality: 'auto' },
-          { fetch_format: 'auto' }
-        ];
-      }
-      // Default property image transformation
-      return [
-        { width: 1200, height: 800, crop: 'fill', quality: 'auto' },
-        { fetch_format: 'auto' }
-      ];
-    };
+ // Update the getTransformation function in your route
+const getTransformation = (folder: string) => {
+  if (folder === 'user-avatars') {
+    return [
+      { width: 200, height: 200, crop: 'fill', gravity: 'face', quality: 'auto' },
+      { fetch_format: 'auto' }
+    ];
+  }
+  if (folder === 'host-avatars') {
+    return [
+      { width: 200, height: 200, crop: 'fill', gravity: 'face', quality: 'auto' },
+      { fetch_format: 'auto' }
+    ];
+  }
+  // Default property image transformation
+  return [
+    { width: 1200, height: 800, crop: 'fill', quality: 'auto' },
+    { fetch_format: 'auto' }
+  ];
+};
 
     // Upload to Cloudinary
     const result = await new Promise<{ secure_url: string; public_id: string }>((resolve, reject) => {

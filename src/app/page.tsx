@@ -39,7 +39,7 @@ export default function Home() {
     
     // Clean up on unmount
     return () => {
-      // sessionStorage.removeItem('refreshed-home');
+      sessionStorage.removeItem('refreshed-home');
     };
   }, []);
 
