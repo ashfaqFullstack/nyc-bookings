@@ -104,12 +104,13 @@ const isHome = pathname === "/";
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 h-10 w-10"
+                  className="rounded-full flex items-center bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 h-10 w-fit px-4"
                   onClick={() => {
                     router.push("/search")
                   }}
                 >
                   <Search className="h-5 w-5" />
+                  Explore Properties
                 </Button>
               </div>
 
