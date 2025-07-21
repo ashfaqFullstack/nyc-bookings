@@ -280,7 +280,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
   if (!hasRefreshed && typeof window !== 'undefined') {
     sessionStorage.setItem(`refreshed-${id}`, 'true');
-    setTimeout(() => window.location.reload(), 100); // delay prevents SSR bugs
+    setTimeout(() => window.location.reload(), 500); // delay prevents SSR bugs
   }
   return () => {
     sessionStorage.removeItem(`refreshed-${id}`);
@@ -777,7 +777,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             <HostexBookingWidget
               listingId={property.listing_id}
               widgetId="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0="
-              className="relative sticky top-6"
+              // className=""
             />
           </div>
         </div>
@@ -785,12 +785,12 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
 
       {/* Mobile Booking Widget Modal */}
       {showMobileBookingWidget && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-10 flex flex-col justify-end">
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-1 flex flex-col justify-end">
           <div
             ref={mobileBookingWidgetRef}
             className="bg-white rounded-t-xl w-full max-h-[90vh] overflow-y-auto"
           >
-            <div className="sticky top-0 bg-white p-4 border-b flex items-center justify-between z-10">
+            <div className="stikcy top-0 bg-white p-4 border-b flex items-center justify-between z-50">
               <h3 className="text-lg font-semibold">Book Your Stay</h3>
               <Button
                 variant="ghost"
@@ -801,7 +801,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="p-4">
+            <div className="p-4 z-50 relative">
               <HostexBookingWidget
                 listingId={property.listing_id as string}
                 widgetId={property.hostexwidgetid as string}
@@ -820,7 +820,10 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
         </div>
         <Button
           className="bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-lg"
-          onClick={() => setShowMobileBookingWidget(true)}
+           onClick={() => {
+              setShowMobileBookingWidget(!showMobileBookingWidget);
+              window.scrollTo(0, 60);
+            }}
         >
           Reserve
         </Button>

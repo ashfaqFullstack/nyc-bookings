@@ -30,7 +30,7 @@ export function Header() {
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const pathname = usePathname();
 const isSearchPage = pathname === "/search";
-// const isProperty = pathname.includes("/property/");
+const isProperty = pathname.includes("/property/");
  const [isDesktop, setIsDesktop] = useState(false); // Default to false, will be updated on mount
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const isSearchPage = pathname === "/search";
             </Link>
           </div>
            {/* Hostex Search Widget - shown only if not on search page */}
-              {(!isSearchPage && !isDesktop)  && (
+              {(!isSearchPage && (!isDesktop || !isProperty))  && (
                 <div className="flex flex-1 justify-center hostex-navbar-widget">
                   <hostex-search-widget
                     result-url="/search"

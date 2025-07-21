@@ -24,7 +24,7 @@ interface Property {
 export default function SearchPage() {
 
     // Add refresh logic
-  useEffect(() => {
+ useEffect(() => {
     // Simple check: if we have a referrer from the same site, refresh once
     const hasRefreshed = sessionStorage.getItem('refreshed-search');
     // const isFromSameSite = document.referrer && 
@@ -33,7 +33,7 @@ export default function SearchPage() {
     if (!hasRefreshed) {
       console.log('Refreshing search page for Hostex widget reset');
       sessionStorage.setItem('refreshed-search', 'true');
-      window.location.reload();
+      window.location.reload()
     }
     
     // Clean up on unmount
@@ -41,6 +41,7 @@ export default function SearchPage() {
       sessionStorage.removeItem('refreshed-search');
     };
   }, []);
+
 
   return (
     <div className="min-h-screen bg-white">

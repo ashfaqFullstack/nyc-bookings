@@ -34,12 +34,12 @@ export default function Home() {
     if (!hasRefreshed) {
       console.log('Refreshing home page for Hostex widget reset');
       sessionStorage.setItem('refreshed-home', 'true');
-      window.location.reload();
+      setTimeout(() => window.location.reload(), 500);
     }
     
     // Clean up on unmount
     return () => {
-      sessionStorage.removeItem('refreshed-home');
+      // sessionStorage.removeItem('refreshed-home');
     };
   }, []);
 
