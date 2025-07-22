@@ -276,16 +276,16 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   const { isLoggedIn } = useAuth();
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
-  useEffect(() => {
-  const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
-  if (!hasRefreshed && typeof window !== 'undefined') {
-    sessionStorage.setItem(`refreshed-${id}`, 'true');
-    setTimeout(() => window.location.reload(), 500); // delay prevents SSR bugs
-  }
-  return () => {
-    sessionStorage.removeItem(`refreshed-${id}`);
-  };
-}, [id]);
+//   useEffect(() => {
+//   const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
+//   if (!hasRefreshed && typeof window !== 'undefined') {
+//     sessionStorage.setItem(`refreshed-${id}`, 'true');
+//     setTimeout(() => window.location.reload(), 500); // delay prevents SSR bugs
+//   }
+//   return () => {
+//     sessionStorage.removeItem(`refreshed-${id}`);
+//   };
+// }, [id]);
 
   useEffect(() => {
     async function fetchProperty() {
@@ -772,19 +772,40 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             </div>
           </div>
 
+           <div className="hidden lg:block lg:col-span-1 sticky top-20 h-fit">
+            <div className="border rounded-xl p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <span className="text-2xl font-semibold">${property.price}</span>
+                  <span className="text-gray-600"> / night</span>
+                </div>
+                <div className="flex items-center">
+                  <Star className="h-4 w-4 fill-black mr-1" />
+                  <span>{property.rating}</span>
+                  <span className="text-gray-500 ml-1">({property.reviewCount})</span>
+                </div>
+              </div>
+              <Link href={`/book/${property.listing_id}`} passHref>
+                <Button className="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-lg">
+                  Reserve
+                </Button>
+              </Link>
+            </div>
+          </div>
+
           {/* Right Column - Hostex Booking Widget */}
-          <div className="hidden lg:block lg:col-span-4 md:order-last md:col-span-6 col-span-12">
+          {/* <div className="hidden lg:block lg:col-span-4 md:order-last md:col-span-6 col-span-12">
             <HostexBookingWidget
               listingId={property.listing_id}
               widgetId="eyJob3N0X2lkIjoiMTAyODU2Iiwid2lkZ2V0X2hvc3QiOiJodHRwczovL3cuaG9zdGV4Ym9va2luZy5zaXRlIn0="
-              // className=""
+              
             />
-          </div>
+          </div> */}
         </div>
       </main>
 
       {/* Mobile Booking Widget Modal */}
-      {showMobileBookingWidget && (
+      {/* {showMobileBookingWidget && (
         <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-1 flex flex-col justify-end">
           <div
             ref={mobileBookingWidgetRef}
@@ -810,10 +831,10 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Sticky booking footer for mobile */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex items-center justify-between z-10">
+      {/* <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex items-center justify-between z-10">
         <div>
           <p className="font-bold text-lg">${property.price} <span className="font-normal text-base">/ night</span></p>
           <p className="text-sm text-gray-500 underline">{property.reviewCount} reviews</p>
@@ -827,6 +848,17 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
         >
           Reserve
         </Button>
+      </div> */}
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex items-center justify-between z-10">
+        <div>
+          <p className="font-bold text-lg">${property.price} <span className="font-normal text-base">/ night</span></p>
+          <p className="text-sm text-gray-500 underline">{property.reviewCount} reviews</p>
+        </div>
+        <Link href={`/book/${property.listing_id}`} >
+          <Button className="bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-lg">
+            Reserve
+          </Button>
+        </Link>
       </div>
 
       {/* Amenities Modal */}
