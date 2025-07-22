@@ -2,30 +2,80 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useWishlist } from "@/lib/wishlist-context";
-import { realProperties } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Heart, Star, MapPin, Calendar, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Heart, Star, MapPin, Loader2 } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+interface Property {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  rating: number;
+  images: string[];
+  neighborhood: string;
+}
+
 export default function WishlistPage() {
   const { user, isLoggedIn, isLoading: authLoading } = useAuth();
-  const { wishlist, isLoading: wishlistLoading, removeFromWishlist } = useWishlist();
+  const {
+    wishlist,
+    isLoading: wishlistLoading,
+    removeFromWishlist,
+    isInWishlist,
+  } = useWishlist();
   const router = useRouter();
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [confirmRemoval, setConfirmRemoval] = useState<string | null>(null);
 
-  // Get properties that are in the wishlist
-  const wishlistedProperties = realProperties.filter(property =>
-    wishlist.includes(property.id)
+  // Fetch properties from backend
+  useEffect(() => {
+    async function fetchProperties() {
+      try {
+        const res = await fetch("/api/properties?limit=100");
+        if (!res.ok) throw new Error("Failed to fetch properties");
+        const data = await res.json();
+        setProperties(data.data.properties);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error loading properties");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProperties();
+  }, []);
+
+  const wishlistedProperties = properties.filter((property) =>
+    isInWishlist(property.id)
   );
 
-  // Show loading spinner while checking authentication or loading wishlist
-  if (authLoading || wishlistLoading) {
+  const handleRemoveFromWishlist = async (propertyId: string) => {
+    const success = await removeFromWishlist(propertyId);
+    if (success) {
+      setConfirmRemoval(null);
+    }
+  };
+
+  const propertyToRemove = wishlistedProperties.find(
+    (property) => property.id === confirmRemoval
+  );
+
+  if (authLoading || wishlistLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -36,20 +86,10 @@ export default function WishlistPage() {
     );
   }
 
-  // Redirect if not logged in (only after loading is complete)
   if (!isLoggedIn) {
     router.push("/");
     return null;
   }
-
-  const handleRemoveFromWishlist = async (propertyId: string) => {
-    const success = await removeFromWishlist(propertyId);
-    if (success) {
-      setConfirmRemoval(null);
-    }
-  };
-
-  const propertyToRemove = wishlistedProperties.find(property => property.id === confirmRemoval);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,10 +101,15 @@ export default function WishlistPage() {
             <p className="text-gray-600">
               {wishlistedProperties.length === 0
                 ? "No saved properties yet. Start exploring and save your favorites!"
-                : `${wishlistedProperties.length} saved ${wishlistedProperties.length === 1 ? 'property' : 'properties'}`
-              }
+                : `${wishlistedProperties.length} saved ${
+                    wishlistedProperties.length === 1 ? "property" : "properties"
+                  }`}
             </p>
           </div>
+
+          {error && (
+            <div className="text-red-500 text-center mb-4">{error}</div>
+          )}
 
           {/* Empty State */}
           {wishlistedProperties.length === 0 ? (
@@ -86,7 +131,10 @@ export default function WishlistPage() {
             /* Properties Grid */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {wishlistedProperties.map((property) => (
-                <Card key={property.id} className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300">
+                <Card
+                  key={property.id}
+                  className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300"
+                >
                   <CardContent className="p-4">
                     <Link href={`/property/${property.id}`}>
                       <div className="relative aspect-square rounded-xl overflow-hidden mb-4">
@@ -96,7 +144,6 @@ export default function WishlistPage() {
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                        {/* Remove from Wishlist Button */}
                         <Button
                           variant="ghost"
                           size="sm"

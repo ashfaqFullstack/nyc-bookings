@@ -123,6 +123,7 @@ export default function Home() {
       {/* Hero Carousel Section */}
       <HeroCarousel />
 
+
       {/* Featured Properties */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 className="text-3xl font-bold mb-8 text-center">Featured Properties</h2>

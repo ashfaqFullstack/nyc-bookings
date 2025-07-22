@@ -31,6 +31,7 @@ export function Header() {
   const pathname = usePathname();
 const isSearchPage = pathname === "/search";
 const isProperty = pathname.includes("/property/");
+const isWishlist = pathname.includes("/wishlist");
 const isHome = pathname === "/";
  const [isDesktop, setIsDesktop] = useState(false); // Default to false, will be updated on mount
 
@@ -87,7 +88,7 @@ const isHome = pathname === "/";
             </Link>
           </div>
            {/* Hostex Search Widget - shown only if not on search page */}
-              {(!isSearchPage && !isHome && (!isDesktop || !isProperty))  && (
+              {(!isSearchPage && !isHome && !isWishlist &&(!isDesktop || !isProperty))  && (
                 <div className="flex flex-1 justify-center hostex-navbar-widget">
                   <hostex-search-widget
                     result-url="/search"
