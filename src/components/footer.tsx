@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { Globe, ChevronUp } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Support */}
-          <div>
+          <div className="w-full" >
+            <Image src='/logo.png' width={105} height={105} alt="Footer Logo" className="object-contain ml-[-20px] lg:ml-0" />
+          </div>
+          {/* <div>
             <h3 className="font-semibold text-gray-900 mb-4">Support</h3>
             <ul className="space-y-3">
               <li>
@@ -32,30 +36,20 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Hosting */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Hosting</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">Support</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/host" className="text-gray-600 hover:text-gray-900 text-sm">
-                  NYC Bookings your home
+                <Link href="/" className="text-gray-600 hover:text-gray-900 text-sm">
+                  Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/hosting-resources" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Hosting resources
-                </Link>
-              </li>
-              <li>
-                <Link href="/community-forum" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Community forum
-                </Link>
-              </li>
-              <li>
-                <Link href="/hosting-responsibly" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Hosting responsibly
+                <Link href="/" className="text-gray-600 hover:text-gray-900 text-sm">
+                  Cancellation Policies
                 </Link>
               </li>
             </ul>
@@ -63,14 +57,19 @@ export function Footer() {
 
           {/* NYC Bookings */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">NYC Bookings</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">NewYorkCityBookings</h3>
             <ul className="space-y-3">
               <li>
+                <Link href="/" className="text-gray-600 hover:text-gray-900 text-sm">
+                  Guest Referal
+                </Link>
+              </li>
+              {/* <li>
                 <Link href="/newsroom" className="text-gray-600 hover:text-gray-900 text-sm">
                   Newsroom
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link href="/new-features" className="text-gray-600 hover:text-gray-900 text-sm">
                   New features
                 </Link>
@@ -84,12 +83,12 @@ export function Footer() {
                 <Link href="/investors" className="text-gray-600 hover:text-gray-900 text-sm">
                   Investors
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
           {/* Legal */}
-          <div className="md:col-span-3 lg:col-span-1">
+          {/* <div className="md:col-span-3 lg:col-span-1">
             <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
             <ul className="space-y-3">
               <li>
@@ -113,7 +112,7 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom Footer */}
@@ -122,19 +121,19 @@ export function Footer() {
           <div className="flex flex-wrap items-center text-sm text-gray-600 space-x-1">
             <span>© 2025 NYC Bookings, Inc.</span>
             <span className="hidden sm:inline">·</span>
-            <Link href="/terms" className="hover:text-gray-900 underline">
+            <Link href="/" className="hover:text-gray-900 underline">
               Terms
             </Link>
             <span>·</span>
-            <Link href="/sitemap" className="hover:text-gray-900 underline">
+            <Link href="/" className="hover:text-gray-900 underline">
               Sitemap
             </Link>
             <span>·</span>
-            <Link href="/privacy" className="hover:text-gray-900 underline">
+            <Link href="/" className="hover:text-gray-900 underline">
               Privacy
             </Link>
             <span>·</span>
-            <Link href="/privacy-choices" className="hover:text-gray-900 underline">
+            <Link href="/" className="hover:text-gray-900 underline">
               Your Privacy Choices
             </Link>
           </div>

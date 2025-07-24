@@ -34,6 +34,8 @@ async function seedProperties() {
         coordinates JSONB NOT NULL,
         neighborhoodinfo JSONB,
         reviews JSONB DEFAULT '[]'::jsonb,
+        hostexwidgetid VARCHAR(255),
+        scriptsrc VARCHAR(255),
         isactive BOOLEAN DEFAULT true,
         createdat TIMESTAMP DEFAULT NOW(),
         updatedat TIMESTAMP DEFAULT NOW()
@@ -59,19 +61,20 @@ async function seedProperties() {
 
       try {
         await sql`
-          INSERT INTO properties (
-            id, listing_id ,title, location, address, neighborhood, price, rating, reviewcount,
+        INSERT INTO properties (
+            id, listing_id, title, location, neighborhood, price, rating, reviewcount,
             images, host, hostimage, hostjoineddate, amenities, description,
             bedrooms, bathrooms, beds, guests, checkin, checkout, houserules,
-            cancellationpolicy, coordinates, neighborhoodinfo, reviews
+            cancellationpolicy, coordinates, neighborhoodinfo, reviews, hostexwidgetid, scriptsrc
           ) VALUES (
-            ${property.id}, ${property.listing_id},${property.title}, ${property.location}, ${property.address}, ${property.neighborhood},
+            ${property.id}, ${property.listing_id},${property.title}, ${property.location}, ${property.neighborhood},
             ${property.price}, ${property.rating}, ${property.reviewCount}, ${property.images},
             ${property.host}, ${property.hostImage}, ${property.hostJoinedDate}, ${property.amenities},
             ${property.description}, ${property.bedrooms}, ${property.bathrooms}, ${property.beds},
             ${property.guests}, ${property.checkIn}, ${property.checkOut}, ${property.houseRules},
             ${property.cancellationPolicy}, ${JSON.stringify(property.coordinates)},
-            ${JSON.stringify(property.neighborhoodInfo)}, ${JSON.stringify(property.reviews)}
+            ${JSON.stringify(property.neighborhoodInfo)}, ${JSON.stringify(property.reviews)},
+            ${property.hostexwidgetid}, ${property.scriptsrc}
           )
         `;
         console.log(`Inserted property: ${property.title}`);

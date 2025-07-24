@@ -60,20 +60,20 @@ export function LoginModal({ isOpen, onClose, onSwitchToSignup, onForgotPassword
         <DialogHeader className="p-6 pb-4">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold">Log in</DialogTitle>
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0"
               onClick={onClose}
             >
               <X className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         </DialogHeader>
 
         <div className="px-6 pb-6">
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Welcome to Airbnb</h2>
+            <h2 className="text-xl font-semibold">Welcome to NewYorkCityBookings</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -137,7 +137,7 @@ export function LoginModal({ isOpen, onClose, onSwitchToSignup, onForgotPassword
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white font-medium disabled:opacity-50"
+                className="w-full h-12 bg-[#2575b8] hover:bg-[#2575b8]/80 text-white font-medium disabled:opacity-50"
               >
                 {isLoading ? (
                   <>

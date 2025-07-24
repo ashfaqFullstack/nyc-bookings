@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
-      title, location, address, neighborhood, price, rating = 0, reviewCount = 0,
+      title, location, neighborhood, price, rating = 0, reviewCount = 0,
       images, host, hostImage, hostJoinedDate, amenities, description,
       bedrooms, bathrooms, beds, guests, checkIn, checkOut, houseRules,
       cancellationPolicy, coordinates, neighborhoodInfo, reviews , hostexwidgetid, scriptsrc, listing_id
@@ -98,12 +98,12 @@ export async function POST(request: NextRequest) {
 
     const result = await sql`
       INSERT INTO properties (
-        id, title, location, address, neighborhood, price, rating, reviewcount,
+        id, title, location, neighborhood, price, rating, reviewcount,
         images, host, hostimage, hostjoineddate, amenities, description,
         bedrooms, bathrooms, beds, guests, checkin, checkout, houserules,
-        cancellationpolicy, coordinates, neighborhoodinfo, reviews, hostexwidgetid, scriptsrc, listing_id,createdat
+        cancellationpolicy, coordinates, neighborhoodinfo, reviews, hostexwidgetid, scriptsrc, listing_id, createdat
       ) VALUES (
-        ${id}, ${title}, ${location}, ${location}, ${neighborhood}, ${price}, ${rating}, ${reviewCount},
+        ${id}, ${title}, ${location}, ${neighborhood}, ${price}, ${rating}, ${reviewCount},
         ${images}, ${host}, ${hostImage || ''}, ${hostJoinedDate || new Date().getFullYear().toString()},
         ${amenities}, ${description}, ${bedrooms}, ${bathrooms}, ${beds}, ${guests},
         ${checkIn}, ${checkOut}, ${houseRules || []}, ${cancellationPolicy || ''},

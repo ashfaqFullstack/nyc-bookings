@@ -26,6 +26,7 @@ async function createTables() {
     console.log('Users table created or already exists.');
 
     // Create properties table
+
     await sql`
       CREATE TABLE IF NOT EXISTS properties (
         id VARCHAR(255) PRIMARY KEY,
@@ -61,6 +62,7 @@ async function createTables() {
         updatedat TIMESTAMP DEFAULT NOW()
       )
     `;
+
     console.log('Properties table created or already exists.');
 
     // Create wishlist table

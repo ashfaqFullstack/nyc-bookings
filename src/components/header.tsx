@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import Logo from '/logo.png'
 import { Search, MapPin, Menu, User, Heart, Calendar, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ import { ForgotPasswordModal } from "@/components/auth/forgot-password-modal";
 import Script from "next/script";
 import '@/styles/hostex-widget.css';
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 
 export function Header() {
@@ -78,13 +80,14 @@ const isHome = pathname === "/";
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full bg-[#2575b8] backdrop-blur supports-[backdrop-filter]:bg-[#2575b8]/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
-              <MapPin className="h-7 w-7 md:h-8 md:w-8" />
+            <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-white hover:text-white/90 transition-colors">
+              {/* <MapPin className="h-7 w-7 md:h-8 md:w-8" /> */}
+              <Image src='/logo.png' width={55} height={55} alt="Nav Logo" className="object-contain" />
               <span className="hidden sm:inline">NewYorkCityBookings</span>
             </Link>
           </div>
@@ -121,10 +124,10 @@ const isHome = pathname === "/";
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 h-10 px-3"
+                    className="rounded-full border border-gray-200 shadow-sm hover:shadow-md text-white hover:text-black transition-all duration-200 h-10 px-3"
                   >
-                    <Menu className="h-5 w-5 sm:h-4 sm:w-4" />
-                    {isLoggedIn ? (
+                    <Menu className="h-5 w-5 sm:h-4  sm:w-4" />
+                    {/* {isLoggedIn ? (
                       <Avatar className="h-6 w-6 ml-2">
                         <AvatarFallback className="text-xs">
                           {user?.firstName?.[0]}{user?.lastName?.[0]}
@@ -132,7 +135,7 @@ const isHome = pathname === "/";
                       </Avatar>
                     ) : (
                       <User className="h-5 w-5 sm:h-4 sm:w-4 ml-2" />
-                    )}
+                    )} */}
                   </Button>
                 </DropdownMenuTrigger>
 

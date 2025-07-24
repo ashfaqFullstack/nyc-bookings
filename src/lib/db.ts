@@ -25,6 +25,7 @@ export type Property = {
   id: string;
   title: string;
   location: string;
+  listing_id:string;
   neighborhood: string;
   price: number;
   rating: number;
@@ -42,6 +43,8 @@ export type Property = {
   checkIn: string;
   checkOut: string;
   houseRules: string[];
+  hostexwidgetid:string;
+  scriptsrc:string;
   cancellationPolicy: string;
   coordinates: { lat: number; lng: number };
   neighborhoodInfo: {
