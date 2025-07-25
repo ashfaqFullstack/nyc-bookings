@@ -159,8 +159,44 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
 
   const saveProperty = useCallback(async () => {
     if (!property) return;
+  // Step 1: Define required fields
+  const requiredFields = [
+    'reviewCount',
+    'hostImage',
+    'hostJoinedDate',
+    'location',
+    'checkIn',
+    'checkOut',
+    'houseRules',
+    'description',
+    'cancellationPolicy',
+    'title',
+    'images',
+    'neighborhoodInfo',
+    'coordinates',
+    'hostexwidgetid',
+    'scriptsrc',
+    'listing_id',
+    'reviews'
+  ];
 
-    setSaving(true);
+  // Step 2: Check for missing fields
+  const missingFields = requiredFields.filter(field => {
+    const value = property[field as keyof typeof property];
+    return value === undefined || value === null || value === '' || field.length <= 0;
+  });
+  
+  if (missingFields.length > 0) {
+    alert(`Missing required fields: ${missingFields.join(', ')}`);
+    return;
+  }
+  
+  
+  if(property?.images.length <= 0){
+    alert(`Images are required to create new property.`);
+    return;
+  }
+  setSaving(true);
     try {
       const token = localStorage.getItem('authToken');
 
@@ -181,7 +217,6 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
         listing_id:property.listing_id,
         reviews: property.reviews
       };
-
       
 
       const url = isEditing ? `/api/admin/properties/${property.id}` : '/api/admin/properties';
