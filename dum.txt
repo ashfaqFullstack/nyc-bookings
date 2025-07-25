@@ -1,0 +1,27 @@
+# Database
+DATABASE_URL=postgresql://neondb_owner:npg_fGiVHAN65zvd@ep-square-dew-a8wofmkg-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+# DATABASE_URL=postgresql://neondb_owner:npg_kEIDMw3KnrT0@ep-curly-salad-a15i0bzy-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+
+
+# JWT Secret (you should use a strong random secret in production)
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+# Next.js
+# for development 
+NEXT_PUBLIC_BASE_URL=https://NewYorkCityBookings.com
+# NEXT_PUBLIC_BASE_URL=https://nyc-bookings.netlify.app/
+NEXTAUTH_URL=https://NewYorkCityBookings.com
+# for production 
+# NEXT_PUBLIC_BASE_URL=https://NewYorkCityBookings.com
+NEXTAUTH_SECRET=your-nextauth-secret-change-this-in-production
+
+# Email Service (Resend)
+# Get your API key from https://resend.com/api-keys
+RESEND_API_KEY=re_CgMxHr1X_ADyWkg8CA4kooAjS9vSqsfq8
+# RESEND_API_KEY=re_fBtTW2BS_huFrDjXPC1C1bn5ug5WXFsZC
+
+# CLOUDINARY 
+CLOUDINARY_API_SECRET=pUFczpwu8oQj71Wihswdxqq7DUg
+CLOUDINARY_API_KEY=842712471668923
+CLOUDINARY_CLOUD_NAME=dl1zk15si
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dl1zk15si

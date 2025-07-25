@@ -80,12 +80,12 @@ const isHome = pathname === "/";
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#2575b8] backdrop-blur supports-[backdrop-filter]:bg-[#2575b8]/60">
+    <header className="sticky top-0 z-50 w-full bg-white backdrop-blur supports-[backdrop-filter]:bg-white/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-white hover:text-white/90 transition-colors">
+            <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-blue-500 hover:text-blue-600/80 transition-colors">
               {/* <MapPin className="h-7 w-7 md:h-8 md:w-8" /> */}
               <Image src='/logo.png' width={55} height={55} alt="Nav Logo" className="object-contain" />
               <span className="hidden sm:inline">NewYorkCityBookings</span>
@@ -124,7 +124,7 @@ const isHome = pathname === "/";
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="rounded-full border border-gray-200 shadow-sm hover:shadow-md text-white hover:text-black transition-all duration-200 h-10 px-3"
+                    className="rounded-full border border-gray-200 shadow-sm hover:shadow-md text-black transition-all duration-200 h-10 px-3"
                   >
                     <Menu className="h-5 w-5 sm:h-4  sm:w-4" />
                     {/* {isLoggedIn ? (
