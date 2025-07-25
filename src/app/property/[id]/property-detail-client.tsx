@@ -35,6 +35,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Upload,
+  User,
 } from "lucide-react";
 
 
@@ -300,11 +301,13 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
         }
         const data = await response.json();
         setProperty(data.data.property);
+
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
         console.error('Error fetching property:', err);
       } finally {
         setLoading(false);
+
       }
     }
 
@@ -320,10 +323,10 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
     }
 
     return () => {
+
       document.body.style.overflow = '';
     };
   }, [showMobileBookingWidget]);
-
   // Close mobile booking widget when clicking outside
   // useEffect(() => {
   //   const handleClickOutside = (event: MouseEvent) => {
@@ -455,6 +458,9 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
       }
     }
   };
+
+
+  
 
   const amenityIcons: { [key: string]: React.ComponentType<React.SVGProps<SVGSVGElement>> } = {
     "WiFi": Wifi,
@@ -639,20 +645,32 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             {/* Sleeping Arrangements */}
             <div className="border-b pb-6">
               <h3 className="text-lg font-semibold mb-4">Where you'll sleep</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Array.from({ length: property.bedrooms }, (_, index) => (
-                  <Card key={`bedroom-${property.id}-${index}`} className="border">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {property.bedroombedtypes?.map((room, index) => {
+                return (
+                  <Card key={`bedroom-${index}`} className="border">
                     <CardContent className="p-4">
-                      <div className="flex items-center space-x-3">
-                        <Bed className="h-8 w-8 text-gray-600" />
+                      <div className="flex items-start space-x-3">
+                        <Bed className="h-8 w-8 text-gray-600 mt-1" />
                         <div>
-                          <div className="font-medium">Bedroom {index + 1}</div>
-                          <div className="text-sm text-gray-600">1 queen bed</div>
+                          <div className="font-semibold text-lg mb-1">
+                            Bedroom {room.bedroomNumber}
+                          </div>
+                          {room.bedTypes ? (
+                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                              {room.bedTypes}
+                            </span>
+                          ) : (
+                            <span className="text-sm text-gray-500 italic">
+                              No bed type specified
+                            </span>
+                          )}
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                );
+              })}
               </div>
             </div>
 
@@ -692,6 +710,8 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
                   {property.reviews.slice(0, showAllReviews ? undefined : 2).map((review) => (
                     <div key={review.id} className="space-y-2">
                       <div className="flex items-center space-x-3">
+                        {
+                          review?.userImage ?
                         <div className="w-10 h-10 rounded-full overflow-hidden">
                           <Image
                             src={review.userImage}
@@ -699,8 +719,12 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
                             width={40}
                             height={40}
                             className="object-cover"
-                          />
+                            />
+                        </div>:
+                          <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-300" >
+                          <User className="text-white text-[40px]" />
                         </div>
+                          }
                         <div>
                           <div className="font-medium">{review.user}</div>
                           <div className="text-sm text-gray-500">{review.date}</div>

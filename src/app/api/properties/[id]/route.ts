@@ -47,6 +47,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       isWishlisted: false // This would need to be calculated based on user's wishlist
     };
 
+    console.log(transformedProperty)
     return Response.json({
       data: {
         property: transformedProperty

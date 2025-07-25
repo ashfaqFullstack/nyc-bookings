@@ -1,9 +1,7 @@
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Info, MapPin, DollarSign, Bed, Bath, Users, Image as ImageIcon, Plus, Trash2, Upload } from 'lucide-react';
-import { Label } from '../ui/label';
 import { useRef, useState } from 'react';
 import { Badge } from '../ui/badge';
 import { useImageUpload } from '@/hooks/use-image-upload';
@@ -11,6 +9,15 @@ import { useUserImageUpload } from '@/hooks/user-user-image-upload';
 import { Progress } from '@/components/ui/progress';
 import { ImageUploadComponent } from './imageUpload';
 import { useHostImageUpload } from '@/hooks/useHostImageUpload';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from '../ui/label';
+import { Input } from '@/components/ui/input';
 
 
 
@@ -38,6 +45,10 @@ interface PropertyFormData {
   amenities: string[];
   description: string;
   bedrooms: number;
+  bedroomBedTypes: {
+    bedroomNumber: number;
+    bedTypes: string;
+  }[];
   bathrooms: number;
   beds: number;
   guests: number;
@@ -156,6 +167,7 @@ export function BasicInfoSection({ property, updateProperty }: SectionProps) {
 }
 export function PropertyDetailsSection({ property, updateProperty }: SectionProps) {
   const { uploadHostImage, uploading: hostImageUploading } = useHostImageUpload();
+  const [bedMenu , setBedMenu] = useState<boolean>(false)
   
   return (
     <Card>
@@ -164,7 +176,7 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
         <CardDescription>Accommodation specifics & Hostex Widget Source</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <Label htmlFor="bedrooms">Bedrooms</Label>
             <Input
@@ -174,6 +186,33 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               value={property.bedrooms}
               onChange={(e) => updateProperty('bedrooms', Number.parseInt(e.target.value) || 0)}
             />
+          </div>
+          <div className="space-y-4">
+            <Label>Bedroom Bed Types</Label>
+            {Array.from({ length: property.bedrooms }, (_, index) => {
+              const bedroomNumber = index + 1;
+              const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
+              return (
+                <div key={bedroomNumber} className="flex items-center gap-2">
+                  <span className="w-24">Bedroom {bedroomNumber}:</span>
+                  <Input
+                    value={existing?.bedTypes?.join(', ') || ''}
+                    onChange={(e) => {
+                      const value = e.target.value.split(',').map(v => v.trim());
+                      const updated = [...(property.bedroomBedTypes || [])];
+                      const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
+                      if (idx >= 0) {
+                        updated[idx].bedTypes = value;
+                      } else {
+                        updated.push({ bedroomNumber, bedTypes: value });
+                      }
+                      updateProperty('bedroomBedTypes', updated);
+                    }}
+                    placeholder="e.g. Queen, Twin"
+                  />
+                </div>
+              );
+            })}
           </div>
           <div>
             <Label htmlFor="bathrooms">Bathrooms</Label>
@@ -205,7 +244,197 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               onChange={(e) => updateProperty('guests', Number.parseInt(e.target.value) || 1)}
             />
           </div>
+        </div> */}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className='relative' >
+            <Label htmlFor="bedrooms">Bedrooms</Label>
+            <Input
+              id="bedrooms"
+              type="number"
+              min="0"
+              onClick={()=>setBedMenu(!bedMenu)}
+              value={property.bedrooms}
+              onChange={(e) => {
+                updateProperty('bedrooms', Number.parseInt(e.target.value) || 0)
+              }}
+            />
+          {(property.bedrooms > 0  && bedMenu) && (
+            <div className="space-y-3 absolute top-[45px] w-full bg-white border-x-2 border-b-2 rounded-[8px] border-gray-500 mt-4">
+              {/* <Label>Bedroom Bed Types</Label> */}
+              {Array.from({ length: property.bedrooms }, (_, index) => {
+                  const bedroomNumber = index + 1;
+                  const existing = property.bedroomBedTypes?.find(
+                    (b) => b.bedroomNumber === bedroomNumber
+                  );
+                  const selectedBedType = existing?.bedTypes || '';
+
+                  return (
+                    <div key={bedroomNumber} className="flex items-center gap-2">
+                      <Select
+                        value={selectedBedType}
+                        onValueChange={(newValue) => {
+                          const updated = [...(property.bedroomBedTypes || [])];
+                          const idx = updated.findIndex(
+                            (b) => b.bedroomNumber === bedroomNumber
+                          );
+
+                          if (idx >= 0) {
+                            updated[idx].bedTypes = newValue;
+                          } else {
+                            updated.push({ bedroomNumber, bedTypes: newValue });
+                          }
+
+                          updateProperty('bedroomBedTypes', updated);
+                        }}
+                      >
+                        <SelectTrigger className="w-full border-0">
+                          <SelectValue placeholder={`Bedroom ${bedroomNumber}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Single">Single</SelectItem>
+                          <SelectItem value="Double">Double</SelectItem>
+                          <SelectItem value="Queen">Queen</SelectItem>
+                          <SelectItem value="King">King</SelectItem>
+                          <SelectItem value="Twin">Twin</SelectItem>
+                          <SelectItem value="Bunk Bed">Bunk Bed</SelectItem>
+                          <SelectItem value="Sofa Bed">Sofa Bed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  );
+                })}
+
+              {/* {Array.from({ length: property.bedrooms }, (_, index) => {
+                const bedroomNumber = index + 1;
+                const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
+                const selectedBedType = existing?.bedTypes?.[0] || '';
+
+                return (
+                  <div key={bedroomNumber} className="flex items-center gap-2">
+                    
+                    <Select
+                      value={selectedBedType}
+                      onValueChange={(newValue) => {
+                        const updated = [...(property.bedroomBedTypes || [])];
+                        const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
+                        const newBedTypeArray = newValue;
+                        if (idx >= 0) {
+                          updated[idx].bedTypes = newBedTypeArray;
+                        } else {
+                          updated.push({ bedroomNumber, bedTypes: newBedTypeArray });
+                        }
+                        updateProperty('bedroomBedTypes', updated);
+                      }}
+                    >
+                      <SelectTrigger className="w-full border-0">
+                        <SelectValue placeholder={`Select Bed Type for Bedroom ${bedroomNumber}`} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Single">Single</SelectItem>
+                        <SelectItem value="Double">Double</SelectItem>
+                        <SelectItem value="Queen">Queen</SelectItem>
+                        <SelectItem value="King">King</SelectItem>
+                        <SelectItem value="Twin">Twin</SelectItem>
+                        <SelectItem value="Bunk Bed">Bunk Bed</SelectItem>
+                        <SelectItem value="Sofa Bed">Sofa Bed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                );
+              })} */}
+            </div>
+          )}
+          </div>
+
+
+  {/* Bedrooms input */}
+  {/* <div>
+    <Label htmlFor="bedrooms">Bedrooms</Label>
+    <Input
+      id="bedrooms"
+      type="number"
+      min="0"
+      value={property.bedrooms}
+      onChange={(e) => updateProperty('bedrooms', Number.parseInt(e.target.value) || 0)}
+    />
+  </div> */}
+
+  {/* Bedroom Bed Types Dropdowns */}
+  {/* <div className="col-span-2 space-y-3">
+    <Label>Bedroom Bed Types</Label>
+    {Array.from({ length: property.bedrooms }, (_, index) => {
+      const bedroomNumber = index + 1;
+      const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
+      const selectedBedType = existing?.bedTypes?.[0] || '';
+
+      return (
+        <div key={bedroomNumber} className="flex items-center gap-2">
+          <span className="w-28 shrink-0">Bedroom {bedroomNumber}:</span>
+          <select
+            value={selectedBedType}
+            onChange={(e) => {
+              const updated = [...(property.bedroomBedTypes || [])];
+              const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
+              const newValue = [e.target.value];
+              if (idx >= 0) {
+                updated[idx].bedTypes = newValue;
+              } else {
+                updated.push({ bedroomNumber, bedTypes: newValue });
+              }
+              updateProperty('bedroomBedTypes', updated);
+            }}
+            className="border rounded px-2 py-1 w-full"
+          >
+            <option value="">Select bed type</option>
+            <option value="Single">Single</option>
+            <option value="Double">Double</option>
+            <option value="Queen">Queen</option>
+            <option value="King">King</option>
+            <option value="Twin">Twin</option>
+            <option value="Bunk Bed">Bunk Bed</option>
+            <option value="Sofa Bed">Sofa Bed</option>
+          </select>
         </div>
+      );
+    })}
+  </div> */}
+
+  {/* Other Inputs */}
+  <div>
+    <Label htmlFor="bathrooms">Bathrooms</Label>
+    <Input
+      id="bathrooms"
+      type="number"
+      min="0"
+      value={property.bathrooms}
+      onChange={(e) => updateProperty('bathrooms', Number.parseInt(e.target.value) || 0)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="beds">Beds</Label>
+    <Input
+      id="beds"
+      type="number"
+      min="0"
+      value={property.beds}
+      onChange={(e) => updateProperty('beds', Number.parseInt(e.target.value) || 0)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="guests">Max Guests</Label>
+    <Input
+      id="guests"
+      type="number"
+      min="1"
+      value={property.guests}
+      onChange={(e) => updateProperty('guests', Number.parseInt(e.target.value) || 1)}
+    />
+  </div>
+</div>
+
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>

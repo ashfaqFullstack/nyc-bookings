@@ -45,6 +45,10 @@ export interface Property {
   amenities: string[];
   description: string;
   bedrooms: number;
+  bedroombedtypes: {
+    bedroomNumber: number;
+    bedTypes: string;
+  }[];
   bathrooms: number;
   beds: number;
   guests: number;
@@ -146,6 +150,9 @@ export const DEFAULT_PROPERTY: PropertyFormData = {
   hostJoinedDate: new Date().getFullYear().toString(),
   amenities: [],
   description: '',
+    bedroombedtypes: [
+  { bedroomNumber: 1, bedTypes: 'Queen' }
+  ],
   bedrooms: 1,
   address:'',
   bathrooms: 1,

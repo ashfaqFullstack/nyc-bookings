@@ -25,6 +25,10 @@ interface PropertyFormData {
   amenities: string[];
   description: string;
   bedrooms: number;
+  bedroomBedTypes: {
+    bedroomNumber: number;
+    bedTypes: string;
+  }[];
   bathrooms: number;
   beds: number;
   guests: number;
@@ -65,6 +69,9 @@ const createNewPropertyObject = (): PropertyFormData => ({
   amenities: [],
   description: '',
   bedrooms: 1,
+  bedroomBedTypes: [
+  { bedroomNumber: 1, bedTypes: 'Queen' }
+  ],
   bathrooms: 1,
   beds: 1,
   guests: 2,
@@ -104,6 +111,8 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
         const data = await response.json();
         const prop = data.data.property;
 
+        console.log(prop, 'propy')
+
         // Transform database fields to match frontend format
         const transformedProperty: PropertyFormData = {
           ...prop,
@@ -114,6 +123,7 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
             ? JSON.parse(prop.neighborhoodinfo)
             : prop.neighborhoodinfo,
           reviewCount: prop.reviewcount,
+          bedroomBedTypes: prop.bedroombedtypes || [],
           listing_id : prop.listing_id,
           hostImage: prop.hostimage,
           hostJoinedDate: prop.hostjoineddate,
@@ -127,7 +137,6 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
             ? JSON.parse(prop.reviews)
             : prop.reviews,
         };
-
         setProperty(transformedProperty);
       } else {
         console.error('Failed to load property');
@@ -206,6 +215,7 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
         reviewCount: property.reviewCount,
         hostImage: property.hostImage,
         hostJoinedDate: property.hostJoinedDate,
+        bedroomBedTypes: property.bedroomBedTypes,
         checkIn: property.checkIn,
         checkOut: property.checkOut,
         houseRules: property.houseRules,
@@ -262,6 +272,9 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
       amenities: [],
       description: '',
       bedrooms: 1,
+       bedroomBedTypes: [
+      { bedroomNumber: 1, bedTypes: 'Queen'}
+      ],
       bathrooms: 1,
       beds: 1,
       guests: 2,

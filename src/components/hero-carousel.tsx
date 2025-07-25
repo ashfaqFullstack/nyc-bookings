@@ -85,10 +85,10 @@ export function HeroCarousel() {
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
-            Discover Amazing NYC Stays
+            Ditch the Fees. Book Direct. Stay NYC.
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-md">
-            Find and book your perfect New York City vacation rental with our integrated booking system.
+            Find and book your perfect New York City stay today — directly with us, securely and fee-free.
           </p>
           <div className="relative mt-8 flex justify-center z-[10000]">
             {/* <Link href="/search" className="w-full sm:w-auto">

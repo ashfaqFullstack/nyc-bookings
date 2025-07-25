@@ -37,6 +37,10 @@ export type Property = {
   amenities: string[];
   description: string;
   bedrooms: number;
+  bedroomBedTypes: {
+    bedroomNumber: number;
+    bedTypes: string[];
+  }[];
   bathrooms: number;
   beds: number;
   guests: number;

@@ -119,9 +119,9 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-8 border-t border-gray-200 space-y-4 sm:space-y-0">
           {/* Copyright and Links */}
           <div className="flex flex-wrap items-center text-sm text-gray-600 space-x-1">
-            <span>© 2025 NYC Bookings, Inc.</span>
-            <span className="hidden sm:inline">·</span>
-            <Link href="/" className="hover:text-gray-900 underline">
+            <span>© 2025 NewYorkCityBookings.</span>
+            {/* <span className="hidden sm:inline">·</span> */}
+            {/* <Link href="/" className="hover:text-gray-900 underline">
               Terms
             </Link>
             <span>·</span>
@@ -135,7 +135,7 @@ export function Footer() {
             <span>·</span>
             <Link href="/" className="hover:text-gray-900 underline">
               Your Privacy Choices
-            </Link>
+            </Link> */}
           </div>
 
           {/* Language and Currency */}

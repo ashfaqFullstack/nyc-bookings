@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
       checkIn: property.checkin,
       checkOut: property.checkout,
       houseRules: property.houserules,
+      bedroomBedTypes : property.bedroomBedTypes,
       listing_id : property.listing_id,
       hostexwidgetid : property.hostexwidgetid,
       scriptsrc: property.scriptsrc,
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest) {
       title, location, neighborhood, price, rating = 0, reviewCount = 0,
       images, host, hostImage, hostJoinedDate, amenities, description,
       bedrooms, bathrooms, beds, guests, checkIn, checkOut, houseRules,
-      cancellationPolicy, coordinates, neighborhoodInfo, reviews , hostexwidgetid, scriptsrc, listing_id
+      cancellationPolicy, coordinates, neighborhoodInfo, reviews , hostexwidgetid, scriptsrc, listing_id , bedroomBedTypes
     } = body;
 
     const id = body.id || `prop_${Date.now()}`;
@@ -96,19 +97,21 @@ export async function POST(request: NextRequest) {
     //   return createAdminResponse('Missing required fields', 400);
     // }
 
+
     const result = await sql`
       INSERT INTO properties (
         id, title, location, neighborhood, price, rating, reviewcount,
         images, host, hostimage, hostjoineddate, amenities, description,
         bedrooms, bathrooms, beds, guests, checkin, checkout, houserules,
-        cancellationpolicy, coordinates, neighborhoodinfo, reviews, hostexwidgetid, scriptsrc, listing_id, createdat
+        cancellationpolicy, coordinates, neighborhoodinfo, reviews,
+        hostexwidgetid, scriptsrc, listing_id, bedroombedtypes, createdat 
       ) VALUES (
         ${id}, ${title}, ${location}, ${neighborhood}, ${price}, ${rating}, ${reviewCount},
         ${images}, ${host}, ${hostImage || ''}, ${hostJoinedDate || new Date().getFullYear().toString()},
         ${amenities}, ${description}, ${bedrooms}, ${bathrooms}, ${beds}, ${guests},
         ${checkIn}, ${checkOut}, ${houseRules || []}, ${cancellationPolicy || ''},
         ${JSON.stringify(coordinates)}, ${JSON.stringify(neighborhoodInfo)}, ${JSON.stringify(reviews)},
-        ${hostexwidgetid}, ${scriptsrc}, ${listing_id},
+        ${hostexwidgetid}, ${scriptsrc}, ${listing_id}, ${JSON.stringify(bedroomBedTypes)},
         NOW()
       )
       RETURNING *

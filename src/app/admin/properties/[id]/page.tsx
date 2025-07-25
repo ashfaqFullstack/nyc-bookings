@@ -122,6 +122,8 @@ export default function EditProperty() {
     return null;
   }
 
+  console.log(property , "property")
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b">
