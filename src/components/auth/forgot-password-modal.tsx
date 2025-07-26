@@ -87,14 +87,14 @@ export function ForgotPasswordModal({ isOpen, onClose, onBackToLogin }: ForgotPa
             <DialogTitle className="text-lg font-semibold">
               {success ? "Check your email" : "Reset your password"}
             </DialogTitle>
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0"
               onClick={handleClose}
             >
               <X className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         </DialogHeader>
 

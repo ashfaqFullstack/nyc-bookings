@@ -20,10 +20,7 @@ export async function POST(req: NextRequest) {
             created_at TIMESTAMPTZ DEFAULT NOW()
         );
         `;
-    await sql`
-        INSERT INTO customers (name, email, message)
-        VALUES (${name}, ${email}, ${message});
-    `;
+ 
 
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
@@ -32,9 +29,9 @@ export async function POST(req: NextRequest) {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     const emailData = {
-      from: 'Contact Form <onboarding@resend.dev>',
-    //   to: 'amirblue21@yahoo.com', 
-      to: 'khichishab3313@gmail.com', 
+      from: 'onboarding@resend.dev',
+      to: 'amirblue21@yahoo.com', 
+      // to: 'khichishab3313@gmail.com', 
       subject: 'Customer Contact Request',
       html: `
        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); overflow: hidden;">
@@ -68,6 +65,10 @@ export async function POST(req: NextRequest) {
     };
 
     const result = await resend.emails.send(emailData);
+    await sql`
+        INSERT INTO customers (name, email, message)
+        VALUES (${name}, ${email}, ${message});
+    `;
 
     if (result.error) {
       return NextResponse.json({ error: result.error.message }, { status: 500 });
