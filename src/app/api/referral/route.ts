@@ -35,8 +35,7 @@ export async function POST(req: NextRequest) {
 
     const emailData = {
       from: 'Contact Form <onboarding@resend.dev>',
-    //   to: 'amirblue21@yahoo.com', 
-      to: 'khichishab3313@gmail.com', 
+      to: 'amirblue21@yahoo.com', 
       subject: 'Guest Referral',
       html: `
        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); overflow: hidden;">
