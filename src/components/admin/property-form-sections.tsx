@@ -9,6 +9,7 @@ import { useUserImageUpload } from '@/hooks/user-user-image-upload';
 import { Progress } from '@/components/ui/progress';
 import { ImageUploadComponent } from './imageUpload';
 import { useHostImageUpload } from '@/hooks/useHostImageUpload';
+import ReactMarkdown from 'react-markdown';
 import {
   Select,
   SelectContent,
@@ -18,8 +19,6 @@ import {
 } from "@/components/ui/select";
 import { Label } from '../ui/label';
 import { Input } from '@/components/ui/input';
-
-
 
 interface Review {
   id: string;
@@ -875,7 +874,21 @@ export function HouseRulesSection({ property, updateProperty }: SectionProps) {
         <CardDescription>Property rules and cancellation policy</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
+         <div>
+            <Label htmlFor="cancellationPolicy">Cancellation Policy</Label>
+            <Textarea
+              id="cancellationPolicy"
+              rows={6}
+              value={property.cancellationPolicy}
+              onChange={(e) => updateProperty('cancellationPolicy', e.target.value)}
+              placeholder="Enter cancellation policy using markdown..."
+            />
+            <div className="mt-4 p-4 border rounded bg-gray-50">
+              <Label className="mb-2 block">Preview:</Label>
+              <ReactMarkdown>{property.cancellationPolicy}</ReactMarkdown>
+            </div>
+          </div>
+        {/* <div>
           <Label htmlFor="cancellationPolicy">Cancellation Policy</Label>
           <Input
             id="cancellationPolicy"
@@ -883,7 +896,7 @@ export function HouseRulesSection({ property, updateProperty }: SectionProps) {
             onChange={(e) => updateProperty('cancellationPolicy', e.target.value)}
             placeholder="e.g., Flexible cancellation policy"
           />
-        </div>
+        </div> */}
 
         <div>
           <Label>House Rules</Label>

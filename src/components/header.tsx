@@ -35,6 +35,9 @@ const isSearchPage = pathname === "/search";
 const isProperty = pathname.includes("/property/");
 const isBooking = pathname.includes("/book");
 const isWishlist = pathname.includes("/wishlist");
+const isContactUs = pathname.includes('/contact')
+const isReferral = pathname.includes('/referral')
+
 const isHome = pathname === "/";
  const [isDesktop, setIsDesktop] = useState(false); // Default to false, will be updated on mount
 
@@ -92,7 +95,7 @@ const isHome = pathname === "/";
             </Link>
           </div>
            {/* Hostex Search Widget - shown only if not on search page */}
-              {(!isSearchPage && !isHome && !isProperty &&!isWishlist && !isBooking)  && (
+              {(!isSearchPage && !isReferral && !isContactUs && !isHome && !isProperty &&!isWishlist && !isBooking)  && (
                 <div className="flex flex-1 justify-center hostex-navbar-widget">
                   <hostex-search-widget
                     result-url="/search"

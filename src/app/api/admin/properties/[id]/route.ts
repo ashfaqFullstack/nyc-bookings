@@ -62,6 +62,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       cancellationPolicy, coordinates, neighborhoodInfo , hostexwidgetid ,scriptsrc, listing_id, bedroomBedTypes
     } = body;
 
+   await sql`
+  ALTER TABLE properties
+  ALTER COLUMN cancellationpolicy TYPE TEXT,
+  ALTER COLUMN cancellationpolicy SET NOT NULL
+`;
+
+
 
     await sql`
       UPDATE properties

@@ -25,7 +25,7 @@ async function createTables() {
     `;
     console.log('Users table created or already exists.');
 
-    // Create properties table
+    
 
     await sql`
       CREATE TABLE IF NOT EXISTS properties (
@@ -51,7 +51,7 @@ async function createTables() {
         checkin VARCHAR(255) NOT NULL,
         checkout VARCHAR(255) NOT NULL,
         houserules TEXT[],
-        cancellationpolicy VARCHAR(255),
+        cancellationpolicy TEXT NOT NULL,
         coordinates JSONB NOT NULL,
         neighborhoodinfo JSONB,
         reviews JSONB DEFAULT '[]'::jsonb,

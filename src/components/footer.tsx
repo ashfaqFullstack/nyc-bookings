@@ -43,7 +43,7 @@ export function Footer() {
             <h3 className="font-semibold text-gray-900 mb-4">Support</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-gray-600 hover:text-gray-900 text-sm">
+                <Link href="/contact-us" className="text-gray-600 hover:text-gray-900 text-sm">
                   Contact Us
                 </Link>
               </li>
@@ -56,35 +56,26 @@ export function Footer() {
           </div>
 
           {/* NYC Bookings */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">NewYorkCityBookings</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Guest Referal
-                </Link>
-              </li>
-              {/* <li>
-                <Link href="/newsroom" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Newsroom
-                </Link>
-              </li> */}
-              {/* <li>
-                <Link href="/new-features" className="text-gray-600 hover:text-gray-900 text-sm">
-                  New features
-                </Link>
-              </li>
-              <li>
-                <Link href="/careers" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="/investors" className="text-gray-600 hover:text-gray-900 text-sm">
-                  Investors
-                </Link>
-              </li> */}
-            </ul>
+          <div className="flex items-start space-y-5 md:space-y-0 flex-col md:flex-row md:justify-between">
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4">NewYorkCityBookings</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link href="/referral" className="text-gray-600 hover:text-gray-900 text-sm">
+                    Guest Referal
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="flex flex-col items-center" >
+              <div className="font-semibold text-gray-900 " >Follow Us</div>
+              <Link 
+                target="_blank"
+                rel="noopener noreferrer" 
+                href="https://www.instagram.com/newyorkcitybookings/?igsh=eGE0Zm0wNGJ5eGxl&utm_source=qr">
+                <Image src="/insta.png" width={100} height={100} alt="Instagram" className="object-contain" />
+              </Link>
+            </div>
           </div>
 
           {/* Legal */}

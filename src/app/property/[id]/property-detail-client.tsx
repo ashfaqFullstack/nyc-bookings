@@ -16,6 +16,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useWishlist } from "@/lib/wishlist-context";
 import { Property } from "@/types/property";
 import '@/styles/hostex-widget.css';
+import ReactMarkdown from 'react-markdown'
 
 import {
   Heart,
@@ -792,7 +793,8 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             {/* Cancellation Policy */}
             <div>
               <h3 className="text-lg font-semibold mb-2">Cancellation policy</h3>
-              <p className="text-gray-700">{property.cancellationPolicy}</p>
+              <ReactMarkdown>{property.cancellationPolicy}</ReactMarkdown>
+              {/* <p className="text-gray-700">{property.cancellationPolicy}</p> */}
             </div>
           </div>
 

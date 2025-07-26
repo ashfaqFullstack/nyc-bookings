@@ -98,6 +98,14 @@ export async function POST(request: NextRequest) {
     // }
 
 
+   await sql`
+  ALTER TABLE properties
+  ALTER COLUMN cancellationpolicy TYPE TEXT,
+  ALTER COLUMN cancellationpolicy SET NOT NULL
+`;
+
+
+
     const result = await sql`
       INSERT INTO properties (
         id, title, location, neighborhood, price, rating, reviewcount,
