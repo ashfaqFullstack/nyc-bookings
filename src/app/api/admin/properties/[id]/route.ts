@@ -26,6 +26,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       neighborhoodInfo: typeof property.neighborhoodinfo === 'string' ? JSON.parse(property.neighborhoodinfo) : property.neighborhoodinfo,
       reviewCount: property.reviewcount,
       hostImage: property.hostimage,
+      bedroombedtypes : property.bedroombedtypes,
       hostJoinedDate: property.hostjoineddate,
       checkIn: property.checkin,
       listing_id : property.listing_id,
@@ -58,8 +59,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       title, location, address, neighborhood, price, rating, reviewCount,
       images, host, hostImage, hostJoinedDate, amenities, description,
       bedrooms, bathrooms, beds, guests, checkIn, checkOut, houseRules,
-      cancellationPolicy, coordinates, neighborhoodInfo , hostexwidgetid ,scriptsrc, listing_id
+      cancellationPolicy, coordinates, neighborhoodInfo , hostexwidgetid ,scriptsrc, listing_id, bedroomBedTypes
     } = body;
+
 
     await sql`
       UPDATE properties
@@ -89,7 +91,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         neighborhoodinfo = ${JSON.stringify(neighborhoodInfo)},
         hostexwidgetid = ${hostexwidgetid},
         scriptsrc = ${scriptsrc},
-        listing_id = ${listing_id}
+        listing_id = ${listing_id},
+        bedroombedtypes = ${JSON.stringify(bedroomBedTypes)}
       WHERE id = ${id}
     `;
 
