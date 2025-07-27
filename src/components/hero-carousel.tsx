@@ -84,8 +84,11 @@ export function HeroCarousel() {
       {/* Content Overlay */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
+          <h1 className="hidden lg:block text-4xl md:text-6xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
             Ditch the Fees. Book Direct. Stay NYC.
+          </h1>
+          <h1 className="lg:hidden text-4xl md:text-6xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
+            Ditch the Fees.<br/> Book Direct.<br/> Stay NYC.
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-md">
             Find and book your perfect New York City stay today — directly with us, securely and fee-free.

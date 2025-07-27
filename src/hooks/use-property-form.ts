@@ -27,7 +27,12 @@ interface PropertyFormData {
   bedrooms: number;
   bedroomBedTypes: {
     bedroomNumber: number;
-    bedTypes: string;
+    bedTypes: string[];
+  }[];
+  livingrooms: number;
+  livingroombedtypes: {
+    livingRoomNumber: number;
+    bedTypes: string[];
   }[];
   bathrooms: number;
   beds: number;
@@ -70,7 +75,11 @@ const createNewPropertyObject = (): PropertyFormData => ({
   description: '',
   bedrooms: 1,
   bedroomBedTypes: [
-  { bedroomNumber: 1, bedTypes: 'Queen' }
+  { bedroomNumber: 1, bedTypes: ['Queen'] }
+  ],
+  livingrooms: 1,
+  livingroombedtypes: [
+    { livingRoomNumber: 1, bedTypes: [] }
   ],
   bathrooms: 1,
   beds: 1,
@@ -197,6 +206,7 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
   
   if (missingFields.length > 0) {
     alert(`Missing required fields: ${missingFields.join(', ')}`);
+    
     return;
   }
   
@@ -216,6 +226,8 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
         hostImage: property.hostImage,
         hostJoinedDate: property.hostJoinedDate,
         bedroomBedTypes: property.bedroomBedTypes,
+        livingrooms : property.livingrooms,
+        livingroombedtypes: property.livingroombedtypes,
         checkIn: property.checkIn,
         checkOut: property.checkOut,
         houseRules: property.houseRules,
@@ -273,7 +285,11 @@ export function usePropertyForm({ isEditing = false }: UsePropertyFormProps = {}
       description: '',
       bedrooms: 1,
        bedroomBedTypes: [
-      { bedroomNumber: 1, bedTypes: 'Queen'}
+      { bedroomNumber: 1, bedTypes: ['Queen']}
+      ],
+      livingrooms: 1,
+      livingroombedtypes: [
+        { livingRoomNumber: 1, bedTypes: [] }
       ],
       bathrooms: 1,
       beds: 1,

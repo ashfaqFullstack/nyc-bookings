@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from '../ui/label';
 import { Input } from '@/components/ui/input';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface Review {
   id: string;
@@ -46,7 +47,12 @@ interface PropertyFormData {
   bedrooms: number;
   bedroomBedTypes: {
     bedroomNumber: number;
-    bedTypes: string;
+    bedTypes: string[];
+  }[];
+  livingrooms: number;
+  livingroombedtypes: {
+    livingRoomNumber: number;
+    bedTypes: string[];
   }[];
   bathrooms: number;
   beds: number;
@@ -136,6 +142,10 @@ export function BasicInfoSection({ property, updateProperty }: SectionProps) {
             rows={4}
           />
         </div>
+        <div className="mt-4 p-4 border rounded bg-gray-50">
+              <Label className="mb-2 block">Description Preview:</Label>
+              <ReactMarkdown>{property.description}</ReactMarkdown>
+            </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
@@ -167,6 +177,7 @@ export function BasicInfoSection({ property, updateProperty }: SectionProps) {
 export function PropertyDetailsSection({ property, updateProperty }: SectionProps) {
   const { uploadHostImage, uploading: hostImageUploading } = useHostImageUpload();
   const [bedMenu , setBedMenu] = useState<boolean>(false)
+  const [livingMenu , setLivingMenu] = useState<boolean>(false)
   
   return (
     <Card>
@@ -175,76 +186,6 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
         <CardDescription>Accommodation specifics & Hostex Widget Source</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <Label htmlFor="bedrooms">Bedrooms</Label>
-            <Input
-              id="bedrooms"
-              type="number"
-              min="0"
-              value={property.bedrooms}
-              onChange={(e) => updateProperty('bedrooms', Number.parseInt(e.target.value) || 0)}
-            />
-          </div>
-          <div className="space-y-4">
-            <Label>Bedroom Bed Types</Label>
-            {Array.from({ length: property.bedrooms }, (_, index) => {
-              const bedroomNumber = index + 1;
-              const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
-              return (
-                <div key={bedroomNumber} className="flex items-center gap-2">
-                  <span className="w-24">Bedroom {bedroomNumber}:</span>
-                  <Input
-                    value={existing?.bedTypes?.join(', ') || ''}
-                    onChange={(e) => {
-                      const value = e.target.value.split(',').map(v => v.trim());
-                      const updated = [...(property.bedroomBedTypes || [])];
-                      const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
-                      if (idx >= 0) {
-                        updated[idx].bedTypes = value;
-                      } else {
-                        updated.push({ bedroomNumber, bedTypes: value });
-                      }
-                      updateProperty('bedroomBedTypes', updated);
-                    }}
-                    placeholder="e.g. Queen, Twin"
-                  />
-                </div>
-              );
-            })}
-          </div>
-          <div>
-            <Label htmlFor="bathrooms">Bathrooms</Label>
-            <Input
-              id="bathrooms"
-              type="number"
-              min="0"
-              value={property.bathrooms}
-              onChange={(e) => updateProperty('bathrooms', Number.parseInt(e.target.value) || 0)}
-            />
-          </div>
-          <div>
-            <Label htmlFor="beds">Beds</Label>
-            <Input
-              id="beds"
-              type="number"
-              min="0"
-              value={property.beds}
-              onChange={(e) => updateProperty('beds', Number.parseInt(e.target.value) || 0)}
-            />
-          </div>
-          <div>
-            <Label htmlFor="guests">Max Guests</Label>
-            <Input
-              id="guests"
-              type="number"
-              min="1"
-              value={property.guests}
-              onChange={(e) => updateProperty('guests', Number.parseInt(e.target.value) || 1)}
-            />
-          </div>
-        </div> */}
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className='relative' >
             <Label htmlFor="bedrooms">Bedrooms</Label>
@@ -259,157 +200,166 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               }}
             />
           {(property.bedrooms > 0  && bedMenu) && (
-            <div className="space-y-3 absolute top-[45px] w-full bg-white border-x-2 border-b-2 rounded-[8px] border-gray-500 mt-4">
-              {/* <Label>Bedroom Bed Types</Label> */}
-              {Array.from({ length: property.bedrooms }, (_, index) => {
+            <div className="space-y-3 absolute top-[45px] w-full !bg-white border-x-2 border-b-2 rounded-[8px] mt-4">
+
+                {Array.from({ length: property.bedrooms }, (_, index) => {
                   const bedroomNumber = index + 1;
-                  const existing = property.bedroomBedTypes?.find(
-                    (b) => b.bedroomNumber === bedroomNumber
-                  );
-                  const selectedBedType = existing?.bedTypes || '';
+                  const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
+                  const selectedBedTypes = existing?.bedTypes || [];
+
+                  const handleAddBedType = (newBedType: string) => {
+                    const updated = [...(property.bedroomBedTypes || [])];
+                    const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
+
+                    if (idx >= 0) {
+                      updated[idx].bedTypes = [...updated[idx].bedTypes, newBedType];
+                    } else {
+                      updated.push({ bedroomNumber, bedTypes: [newBedType] });
+                    }
+
+                    updateProperty('bedroomBedTypes', updated);
+                  };
+
+                  const handleRemoveBedType = (bedTypeIndex: number) => {
+                    const updated = [...(property.bedroomBedTypes || [])];
+                    const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
+
+                    if (idx >= 0) {
+                      updated[idx].bedTypes.splice(bedTypeIndex, 1);
+                      updateProperty('bedroomBedTypes', updated);
+                    }
+                  };
 
                   return (
-                    <div key={bedroomNumber} className="flex items-center gap-2">
-                      <Select
-                        value={selectedBedType}
-                        onValueChange={(newValue) => {
-                          const updated = [...(property.bedroomBedTypes || [])];
-                          const idx = updated.findIndex(
-                            (b) => b.bedroomNumber === bedroomNumber
-                          );
+                    <div key={bedroomNumber} className="mb-4 bg-white p-4 border rounded-lg">
+                      <h3 className="font-semibold mb-2">Bedroom {bedroomNumber}</h3>
 
-                          if (idx >= 0) {
-                            updated[idx].bedTypes = newValue;
-                          } else {
-                            updated.push({ bedroomNumber, bedTypes: newValue });
-                          }
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {selectedBedTypes.map((bed, bedIdx) => (
+                          <div
+                            key={bedIdx}
+                            className="flex items-center gap-1 px-2 py-1 bg-gray-200 rounded"
+                          >
+                            {bed}
+                            <button
+                              onClick={() => handleRemoveBedType(bedIdx)}
+                              className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
 
-                          updateProperty('bedroomBedTypes', updated);
-                        }}
-                      >
-                        <SelectTrigger className="w-full border-0">
-                          <SelectValue placeholder={`Bedroom ${bedroomNumber}`} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Single">Single</SelectItem>
-                          <SelectItem value="Double">Double</SelectItem>
-                          <SelectItem value="Queen">Queen</SelectItem>
-                          <SelectItem value="King">King</SelectItem>
-                          <SelectItem value="Twin">Twin</SelectItem>
-                          <SelectItem value="Bunk Bed">Bunk Bed</SelectItem>
-                          <SelectItem value="Sofa Bed">Sofa Bed</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex items-center gap-2">
+                        <Select onValueChange={handleAddBedType}>
+                          <SelectTrigger className="w-full border border-gray-300">
+                            <SelectValue placeholder="Add bed type..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Single">Single</SelectItem>
+                            <SelectItem value="Double">Double</SelectItem>
+                            <SelectItem value="Queen">Queen</SelectItem>
+                            <SelectItem value="King">King</SelectItem>
+                            <SelectItem value="Twin">Twin</SelectItem>
+                            <SelectItem value="Bunk Bed">Bunk Bed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   );
                 })}
-
-              {/* {Array.from({ length: property.bedrooms }, (_, index) => {
-                const bedroomNumber = index + 1;
-                const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
-                const selectedBedType = existing?.bedTypes?.[0] || '';
-
-                return (
-                  <div key={bedroomNumber} className="flex items-center gap-2">
-                    
-                    <Select
-                      value={selectedBedType}
-                      onValueChange={(newValue) => {
-                        const updated = [...(property.bedroomBedTypes || [])];
-                        const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
-                        const newBedTypeArray = newValue;
-                        if (idx >= 0) {
-                          updated[idx].bedTypes = newBedTypeArray;
-                        } else {
-                          updated.push({ bedroomNumber, bedTypes: newBedTypeArray });
-                        }
-                        updateProperty('bedroomBedTypes', updated);
-                      }}
-                    >
-                      <SelectTrigger className="w-full border-0">
-                        <SelectValue placeholder={`Select Bed Type for Bedroom ${bedroomNumber}`} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Single">Single</SelectItem>
-                        <SelectItem value="Double">Double</SelectItem>
-                        <SelectItem value="Queen">Queen</SelectItem>
-                        <SelectItem value="King">King</SelectItem>
-                        <SelectItem value="Twin">Twin</SelectItem>
-                        <SelectItem value="Bunk Bed">Bunk Bed</SelectItem>
-                        <SelectItem value="Sofa Bed">Sofa Bed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                );
-              })} */}
             </div>
           )}
           </div>
 
-
-  {/* Bedrooms input */}
-  {/* <div>
-    <Label htmlFor="bedrooms">Bedrooms</Label>
-    <Input
-      id="bedrooms"
-      type="number"
-      min="0"
-      value={property.bedrooms}
-      onChange={(e) => updateProperty('bedrooms', Number.parseInt(e.target.value) || 0)}
-    />
-  </div> */}
-
-  {/* Bedroom Bed Types Dropdowns */}
-  {/* <div className="col-span-2 space-y-3">
-    <Label>Bedroom Bed Types</Label>
-    {Array.from({ length: property.bedrooms }, (_, index) => {
-      const bedroomNumber = index + 1;
-      const existing = property.bedroomBedTypes?.find(b => b.bedroomNumber === bedroomNumber);
-      const selectedBedType = existing?.bedTypes?.[0] || '';
-
-      return (
-        <div key={bedroomNumber} className="flex items-center gap-2">
-          <span className="w-28 shrink-0">Bedroom {bedroomNumber}:</span>
-          <select
-            value={selectedBedType}
-            onChange={(e) => {
-              const updated = [...(property.bedroomBedTypes || [])];
-              const idx = updated.findIndex(b => b.bedroomNumber === bedroomNumber);
-              const newValue = [e.target.value];
-              if (idx >= 0) {
-                updated[idx].bedTypes = newValue;
-              } else {
-                updated.push({ bedroomNumber, bedTypes: newValue });
-              }
-              updateProperty('bedroomBedTypes', updated);
-            }}
-            className="border rounded px-2 py-1 w-full"
-          >
-            <option value="">Select bed type</option>
-            <option value="Single">Single</option>
-            <option value="Double">Double</option>
-            <option value="Queen">Queen</option>
-            <option value="King">King</option>
-            <option value="Twin">Twin</option>
-            <option value="Bunk Bed">Bunk Bed</option>
-            <option value="Sofa Bed">Sofa Bed</option>
-          </select>
-        </div>
-      );
-    })}
-  </div> */}
-
   {/* Other Inputs */}
-  <div>
-    <Label htmlFor="bathrooms">Bathrooms</Label>
-    <Input
-      id="bathrooms"
-      type="number"
-      min="0"
-      value={property.bathrooms}
-      onChange={(e) => updateProperty('bathrooms', Number.parseInt(e.target.value) || 0)}
-    />
-  </div>
+   <div className='relative' >
+
+          <Label className="mb-2 font-medium">Living Rooms</Label>
+          <Input
+            id="livingrooms"
+            min={0}
+            onClick={()=>setLivingMenu(!livingMenu)}
+            value={property.livingrooms || 0}
+            onChange={(e) => updateProperty('livingrooms', parseInt(e.target.value))}
+            // className="border px-2 py-1 rounded w-32"
+          />
+          <div className='bg-white absolute top-[60px] w-full' >
+
+          {
+            (property.livingrooms > 0 && livingMenu) && (
+              Array.from({ length: property.livingrooms || 0 }, (_, index) => {
+  const livingRoomNumber = index + 1;
+  const existing = property.livingroombedtypes?.find(
+    l => l.livingRoomNumber === livingRoomNumber
+  );
+  const selectedBedTypes = existing?.bedTypes || [];
+
+  const handleAddSofaBed = () => {
+    const updated = [...(property.livingroombedtypes || [])];
+    const idx = updated.findIndex(l => l.livingRoomNumber === livingRoomNumber);
+
+    if (idx >= 0) {
+      updated[idx].bedTypes = [...updated[idx].bedTypes, 'Sofa Bed'];
+    } else {
+      updated.push({ livingRoomNumber, bedTypes: ['Sofa Bed'] });
+    }
+
+    updateProperty('livingroombedtypes', updated);
+  };
+
+  const handleRemoveSofaBed = (bedTypeIndex: number) => {
+    const updated = [...(property.livingroombedtypes || [])];
+    const idx = updated.findIndex(l => l.livingRoomNumber === livingRoomNumber);
+
+    if (idx >= 0) {
+      updated[idx].bedTypes.splice(bedTypeIndex, 1);
+      updateProperty('livingroombedtypes', updated);
+    }
+  };
+
+  return (
+    <div key={livingRoomNumber} className=" bg-white p-4 w-full border rounded-lg">
+      <h3 className="font-semibold mb-2">Living Room {livingRoomNumber}</h3>
+      <div className='flex justify-between' >
+
+      <div className="flex flex-wrap  gap-2 mb-2">
+        {selectedBedTypes.map((bed, bedIdx) => (
+          <div
+            key={bedIdx}
+            className="flex  items-center gap-1 px-2 py-1 bg-[#2575b8]/80 text-white  rounded"
+          >
+            {bed}
+            <button
+              onClick={() => handleRemoveSofaBed(bedIdx)}
+              className="text-white text-sm"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={handleAddSofaBed}
+        className="text-sm h-fit bg-[#2575b8] hover:bg-[#2575b8]/80 text-white px-3 py-1 rounded"
+      >
+        + Add Sofa Bed
+      </button>
+      </div>
+
+    </div>
+  );
+})
+
+            )
+          }
+          </div>
+          </div>
+
+  
 
   <div>
     <Label htmlFor="beds">Beds</Label>
@@ -433,9 +383,18 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
     />
   </div>
 </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+         <div>
+    <Label htmlFor="bathrooms">Bathrooms</Label>
+    <Input
+      id="bathrooms"
+      type="number"
+      min="0"
+      value={property.bathrooms}
+      onChange={(e) => updateProperty('bathrooms', Number.parseInt(e.target.value) || 0)}
+    />
+  </div>
 
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="host">Host Name</Label>
             <Input
@@ -548,11 +507,25 @@ export function ImagesSection({ property, updateProperty }: SectionProps) {
       const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
       
       if (!isValidType) {
-        alert(`${file.name} is not a valid image file`);
+        toast(`${file.name} is not a valid image file`, {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
         return false;
       }
       if (!isValidSize) {
-        alert(`${file.name} is too large. Maximum size is 10MB`);
+        toast(`${file.name} is too large. Maximum size is 10MB`, {
+          icon: '⚠️',
+          style: {
+            background: '#facc15', // yellow-400
+            color: '#000',
+            fontWeight: 'bold',
+          },
+        });
         return false;
       }
       return true;
@@ -566,7 +539,7 @@ export function ImagesSection({ property, updateProperty }: SectionProps) {
       updateProperty('images', [...property.images, ...newImageUrls]);
     } catch (error) {
       console.error('Upload failed:', error);
-      alert('Failed to upload images. Please try again.');
+      toast.error('Failed to upload images. Please try again.');
     }
   };
 
@@ -601,6 +574,10 @@ export function ImagesSection({ property, updateProperty }: SectionProps) {
         <CardDescription>Upload images or add URLs for property photos</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
         {/* File Upload Section */}
         <div className="space-y-4">
           <div
@@ -956,7 +933,15 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
 
   const handleAddReview = () => {
     if (!newReview.user.trim() || !newReview.comment.trim()) {
-      alert('Please fill in user name and comment');
+      toast('Please fill in user name and comment', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
+      
       return;
     }
     
@@ -979,11 +964,25 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
 
   const handleUserImageUpload = async (file: File, isEditing: boolean = false) => {
     if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file');
+      toast('Please select a valid image file', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
       return;
     }
     if (file.size > 5 * 1024 * 1024) { // 5MB limit for user images
-      alert('Image size must be less than 5MB');
+      toast('Image size must be less than 5MB', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
       return;
     }
 
@@ -998,7 +997,7 @@ export function ReviewsSection({ property, updateProperty }: SectionProps) {
       }
     } catch (error) {
       console.error('Failed to upload user image:', error);
-      alert('Failed to upload image. Please try again.');
+      toast.error('Failed to upload image. Please try again.');
     } finally {
       setUploadingUserImage(null);
     }

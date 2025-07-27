@@ -44,6 +44,8 @@ export async function GET(request: NextRequest) {
       checkOut: property.checkout,
       houseRules: property.houserules,
       bedroomBedTypes : property.bedroomBedTypes,
+      livingRooms : property.livingRooms,
+      livingRoomBedTypes: property.livingRoomBedTypes,
       listing_id : property.listing_id,
       hostexwidgetid : property.hostexwidgetid,
       scriptsrc: property.scriptsrc,
@@ -85,9 +87,12 @@ export async function POST(request: NextRequest) {
       title, location, neighborhood, price, rating = 0, reviewCount = 0,
       images, host, hostImage, hostJoinedDate, amenities, description,
       bedrooms, bathrooms, beds, guests, checkIn, checkOut, houseRules,
-      cancellationPolicy, coordinates, neighborhoodInfo, reviews , hostexwidgetid, scriptsrc, listing_id , bedroomBedTypes
+      cancellationPolicy, coordinates, neighborhoodInfo, reviews , hostexwidgetid, scriptsrc, listing_id , bedroomBedTypes,  livingrooms,
+      livingroombedtypes,
     } = body;
 
+
+    console.log(livingrooms , livingroombedtypes)
     const id = body.id || `prop_${Date.now()}`;
 
     // Validation
@@ -103,6 +108,12 @@ export async function POST(request: NextRequest) {
   ALTER COLUMN cancellationpolicy TYPE TEXT,
   ALTER COLUMN cancellationpolicy SET NOT NULL
 `;
+await sql`
+  ALTER TABLE properties
+  ADD COLUMN IF NOT EXISTS livingrooms INTEGER NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS livingroombedtypes JSONB DEFAULT '[]';
+`;
+
 
 
 
@@ -112,14 +123,14 @@ export async function POST(request: NextRequest) {
         images, host, hostimage, hostjoineddate, amenities, description,
         bedrooms, bathrooms, beds, guests, checkin, checkout, houserules,
         cancellationpolicy, coordinates, neighborhoodinfo, reviews,
-        hostexwidgetid, scriptsrc, listing_id, bedroombedtypes, createdat 
+        hostexwidgetid, scriptsrc, listing_id, bedroombedtypes, livingrooms, livingroombedtypes, createdat 
       ) VALUES (
         ${id}, ${title}, ${location}, ${neighborhood}, ${price}, ${rating}, ${reviewCount},
         ${images}, ${host}, ${hostImage || ''}, ${hostJoinedDate || new Date().getFullYear().toString()},
         ${amenities}, ${description}, ${bedrooms}, ${bathrooms}, ${beds}, ${guests},
         ${checkIn}, ${checkOut}, ${houseRules || []}, ${cancellationPolicy || ''},
         ${JSON.stringify(coordinates)}, ${JSON.stringify(neighborhoodInfo)}, ${JSON.stringify(reviews)},
-        ${hostexwidgetid}, ${scriptsrc}, ${listing_id}, ${JSON.stringify(bedroomBedTypes)},
+        ${hostexwidgetid}, ${scriptsrc}, ${listing_id}, ${JSON.stringify(bedroomBedTypes)}, ${livingrooms}, ${JSON.stringify(livingroombedtypes)},
         NOW()
       )
       RETURNING *

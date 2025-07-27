@@ -47,7 +47,12 @@ export interface Property {
   bedrooms: number;
   bedroombedtypes: {
     bedroomNumber: number;
-    bedTypes: string;
+    bedTypes: string[];
+  }[];
+  livingrooms: number;
+  livingroombedtypes: {
+    livingRoomNumber: number;
+    bedTypes: string[];
   }[];
   bathrooms: number;
   beds: number;
@@ -151,7 +156,11 @@ export const DEFAULT_PROPERTY: PropertyFormData = {
   amenities: [],
   description: '',
     bedroombedtypes: [
-  { bedroomNumber: 1, bedTypes: 'Queen' }
+  { bedroomNumber: 1, bedTypes: ['Queen'] }
+  ],
+   livingrooms: 1,
+  livingroombedtypes: [
+    { livingRoomNumber: 1, bedTypes: ['Sofa Bed'] }
   ],
   bedrooms: 1,
   address:'',

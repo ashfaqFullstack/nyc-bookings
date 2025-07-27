@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 // import { toast } from "sonner";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -20,7 +21,14 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      alert("Please fill in all fields");
+      toast('Please fill all fields!', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
       return;
     }
 
@@ -35,10 +43,14 @@ export default function ContactPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-      alert("We have received your message! We will contact you shortly.");
+      toast.success("We have received your message! We will contact you shortly.",{
+        duration: 10000, // 20 seconds
+      });
       setForm({ name: "", email: "", message: "" });
     } catch (error) {
-      alert(error);
+      toast.error("Error Occured while Sending Message!",{
+        duration: 4000, // 20 seconds
+      });
     } finally {
       setLoading(false);
     }
@@ -46,6 +58,10 @@ export default function ContactPage() {
 
   return (
     <div className="max-w-xl my-[3%] mx-auto p-4">
+      <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
       <h1 className="text-2xl font-bold mb-4">Contact Us</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

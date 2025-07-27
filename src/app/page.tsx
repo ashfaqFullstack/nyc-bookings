@@ -6,6 +6,7 @@ import { PropertyCard } from "@/components/property-card";
 import { Footer } from "@/components/footer";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { useState, useEffect } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 
 interface Property {
   id: string;
@@ -66,12 +67,16 @@ export default function Home() {
   }, []);
 
   const handleLoginRequired = () => {
-    alert("Please log in to add properties to your wishlist");
+    toast.error("Please log in to add properties to your wishlist");
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
         <Header />
         <HeroCarousel />
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">

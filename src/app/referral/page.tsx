@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import toast, { Toaster } from "react-hot-toast";
 // import { toast } from "sonner";
 
 export default function ContactPage() {
@@ -20,7 +21,14 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message || !form.agency || !form.phone) {
-      alert("Please fill in all fields");
+      toast('Please fill all required fields!', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
       return;
     }
 
@@ -35,10 +43,10 @@ export default function ContactPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-      alert("We have received your message! Thanks for Referring a guest to us.");
+      toast.success("We have received your message! Thanks for Referring a guest to us.");
       setForm({ name: "", agency: "", phone: "", email: "", message: ""  });
     } catch (error) {
-      alert(error);
+      toast.error('Error ocurred while sendin message!');
     } finally {
       setLoading(false);
     }
@@ -46,6 +54,10 @@ export default function ContactPage() {
 
   return (
     <div className="max-w-xl my-[3%] mx-auto p-4">
+      <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
       <h1 className="text-2xl font-bold mb-4">Refer a Guest</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

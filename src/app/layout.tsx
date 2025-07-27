@@ -10,6 +10,7 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -18,6 +19,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "NewYorkCity Bookings - NYC Holiday Homes & Apartment Rentals",
   description: "Find and book unique accommodations throughout New York City",
+   openGraph: {
+      images: ['/preview-nyc.png'], // Path to your image in the public folder
+    },
+    twitter: {
+      card: 'summary_large_image', // Or 'summary', 'app', 'player'
+      images: ['/preview-nyc.png'],
+    },
 };
 
 export default function RootLayout({

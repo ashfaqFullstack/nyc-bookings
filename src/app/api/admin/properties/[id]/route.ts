@@ -59,7 +59,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       title, location, address, neighborhood, price, rating, reviewCount,
       images, host, hostImage, hostJoinedDate, amenities, description,
       bedrooms, bathrooms, beds, guests, checkIn, checkOut, houseRules,
-      cancellationPolicy, coordinates, neighborhoodInfo , hostexwidgetid ,scriptsrc, listing_id, bedroomBedTypes
+      cancellationPolicy, coordinates, neighborhoodInfo , hostexwidgetid ,scriptsrc, listing_id, bedroomBedTypes,
+      livingrooms , livingroombedtypes
     } = body;
 
    await sql`
@@ -67,6 +68,15 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   ALTER COLUMN cancellationpolicy TYPE TEXT,
   ALTER COLUMN cancellationpolicy SET NOT NULL
 `;
+
+console.log(livingrooms)
+
+// await sql`
+//   ALTER TABLE properties
+//   ADD COLUMN IF NOT EXISTS livingrooms INTEGER NOT NULL DEFAULT 0,
+//   ADD COLUMN IF NOT EXISTS livingroombedtypes JSONB DEFAULT '[]';
+// `;
+
 
 
 
@@ -88,6 +98,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         description = ${description},
         bedrooms = ${bedrooms},
         bathrooms = ${bathrooms},
+        livingrooms = ${livingrooms},
         beds = ${beds},
         guests = ${guests},
         checkin = ${checkIn},
@@ -99,7 +110,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         hostexwidgetid = ${hostexwidgetid},
         scriptsrc = ${scriptsrc},
         listing_id = ${listing_id},
-        bedroombedtypes = ${JSON.stringify(bedroomBedTypes)}
+        bedroombedtypes = ${JSON.stringify(bedroomBedTypes)},
+        livingroombedtypes = ${JSON.stringify(livingroombedtypes)}
       WHERE id = ${id}
     `;
 

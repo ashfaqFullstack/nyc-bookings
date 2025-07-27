@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface ImageUploadComponentProps {
   imageUrl: string;
@@ -27,12 +28,26 @@ export function ImageUploadComponent({
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file');
+      toast('Please select a valid image file', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      alert('Image size must be less than 5MB');
+      toast('Image size must be less than 5MB', {
+        icon: '⚠️',
+        style: {
+          background: '#facc15', // yellow-400
+          color: '#000',
+          fontWeight: 'bold',
+        },
+      });
       return;
     }
 
@@ -41,12 +56,16 @@ export function ImageUploadComponent({
       onImageChange(result.url);
     } catch (error) {
       console.error('Failed to upload image:', error);
-      alert('Failed to upload image. Please try again.');
+      toast.error('Failed to upload image. Please try again.')
     }
   };
 
   return (
     <div className="space-y-2">
+      <Toaster
+          position="top-right"
+          reverseOrder={false}
+        />
       <Label>{label}</Label>
       <div className="flex items-center gap-4">
         {imageUrl && (

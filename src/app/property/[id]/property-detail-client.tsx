@@ -4,14 +4,12 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { PhotoGallery } from "@/components/photo-gallery";
 import { AmenitiesModal } from "@/components/amenities-modal";
-import { HostexBookingWidget } from "@/components/hostex-booking-widget";
 import { useAuth } from "@/lib/auth-context";
 import { useWishlist } from "@/lib/wishlist-context";
 import { Property } from "@/types/property";
@@ -48,6 +46,7 @@ interface PropertyDetailClientProps {
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import Markdown from "react-markdown";
 
 interface PropertyMapProps {
   coordinates: { lat: number; lng: number };
@@ -216,53 +215,6 @@ export function PropertyMap({ coordinates }: PropertyMapProps) {
   );
 }
 
-// ... rest of the component remains the same ...
-
-
-// import { useEffect, useRef } from "react";
-// import L from "leaflet";
-// import "leaflet/dist/leaflet.css";
-
-// interface PropertyMapProps {
-//   coordinates: { lat: number; lng: number };
-// }
-
-// export function PropertyMap({ coordinates }: PropertyMapProps) {
-//   const mapRef = useRef<HTMLDivElement | null>(null);
-//   const leafletMapRef = useRef<L.Map | null>(null); // Store Leaflet instance
-
-//   useEffect(() => {
-//     if (mapRef.current && !leafletMapRef.current) {
-//       leafletMapRef.current = L.map(mapRef.current).setView(
-//         [coordinates.lat, coordinates.lng],
-//         13
-//       );
-
-//       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-//         attribution: '&copy; OpenStreetMap contributors',
-//       }).addTo(leafletMapRef.current);
-
-//       const customIcon = L.icon({
-//         iconUrl: '/marker-icon.png', 
-//         iconSize: [40, 40], 
-//         iconAnchor: [16, 32],
-//         popupAnchor: [0, -32],
-//         shadowUrl: undefined,
-//       });
-
-//       L.marker([coordinates.lat, coordinates.lng], { icon: customIcon }).addTo(leafletMapRef.current);
-//     }
-//   }, [coordinates]);
-
-//   return (
-//     <div
-//       ref={mapRef}
-//       style={{ height: "100%", width: "100%" }}
-//       className="rounded-lg"
-//     />
-//   );
-// }
-
 export default function PropertyDetailClient({ id }: PropertyDetailClientProps) {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
@@ -273,21 +225,15 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
   const [showMobileBookingWidget, setShowMobileBookingWidget] = useState(false);
-  const mobileBookingWidgetRef = useRef<HTMLDivElement>(null);
 
   const { isLoggedIn } = useAuth();
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
-//   useEffect(() => {
-//   const hasRefreshed = sessionStorage.getItem(`refreshed-${id}`);
-//   if (!hasRefreshed && typeof window !== 'undefined') {
-//     sessionStorage.setItem(`refreshed-${id}`, 'true');
-//     setTimeout(() => window.location.reload(), 500); // delay prevents SSR bugs
-//   }
-//   return () => {
-//     sessionStorage.removeItem(`refreshed-${id}`);
-//   };
-// }, [id]);
+   const contentRef = useRef<HTMLDivElement>(null);
+  const [showFull, setShowFull] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+ 
 
   useEffect(() => {
     async function fetchProperty() {
@@ -315,6 +261,8 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
     fetchProperty();
   }, [id]);
 
+
+
   useEffect(() => {
     // Lock body scroll when mobile booking widget is shown
     if (showMobileBookingWidget) {
@@ -328,29 +276,17 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
       document.body.style.overflow = '';
     };
   }, [showMobileBookingWidget]);
-  // Close mobile booking widget when clicking outside
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       mobileBookingWidgetRef.current &&
-  //       !mobileBookingWidgetRef.current.contains(event.target as Node) &&
-  //       showMobileBookingWidget
-  //     ) {
-  //       // Don't close if clicked on the booking widget itself
-  //       const target = event.target as HTMLElement;
-  //       if (
-  //         target.closest('hostex-booking-widget') ||
-  //         target.tagName.toLowerCase().includes('hostex')
-  //       ) {
-  //         return;
-  //       }
-  //       setShowMobileBookingWidget(false);
-  //     }
-  //   };
 
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, [showMobileBookingWidget]);
+  useEffect(() => {
+    const el = contentRef.current;
+    if (el) {
+      const lineHeight = parseFloat(getComputedStyle(el).lineHeight || "24");
+      const maxLines = 10;
+      const maxHeight = lineHeight * maxLines;
+
+      setIsOverflowing(el.scrollHeight > maxHeight);
+    }
+  }, [property]);
 
   if (loading) {
     return (
@@ -460,6 +396,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
     }
   };
 
+   
 
   
 
@@ -475,7 +412,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen lg:pb-0 bg-white font-sans">
       <Header />
 
       <main className="lg:container mx-auto lg:px-8 lg:py-6">
@@ -639,39 +576,111 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
 
             {/* Property Description */}
             <div className="border-b pb-6">
+      <h3 className="text-lg font-semibold mb-3">About this place</h3>
+
+      <div
+        ref={contentRef}
+        className={`
+          transition-all duration-300 overflow-hidden
+          ${showFull ? '' : 'line-clamp-[10]'}
+        `}
+        style={!showFull ? { display: "-webkit-box", WebkitLineClamp: 10, WebkitBoxOrient: "vertical", overflow: "hidden" } : {}}
+      >
+        <ReactMarkdown>{property.description}</ReactMarkdown>
+      </div>
+
+      {isOverflowing && (
+        <button
+          onClick={() => setShowFull(prev => !prev)}
+          className="mt-2 text-blue-600 font-medium hover:underline"
+        >
+          {showFull ? "Show less" : "Show more"}
+        </button>
+      )}
+    </div>
+            {/* <div className="border-b pb-6">
               <h3 className="text-lg font-semibold mb-3">About this place</h3>
-              <p className="text-gray-700 leading-relaxed">{property.description}</p>
-            </div>
+              <ReactMarkdown>{property.description}</ReactMarkdown>
+            </div> */}
 
             {/* Sleeping Arrangements */}
             <div className="border-b pb-6">
               <h3 className="text-lg font-semibold mb-4">Where you'll sleep</h3>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {property.bedroombedtypes?.map((room, index) => {
-                return (
-                  <Card key={`bedroom-${index}`} className="border">
-                    <CardContent className="p-4">
-                      <div className="flex items-start space-x-3">
-                        <Bed className="h-8 w-8 text-gray-600 mt-1" />
-                        <div>
-                          <div className="font-semibold text-lg mb-1">
-                            Bedroom {room.bedroomNumber}
-                          </div>
-                          {room.bedTypes ? (
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                              {room.bedTypes}
-                            </span>
-                          ) : (
-                            <span className="text-sm text-gray-500 italic">
-                              No bed type specified
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+  return (
+    <Card key={`bedroom-${index}`} className="border">
+      <CardContent className="p-4">
+        <div className="flex items-start space-x-3">
+          <Bed className="h-8 w-8 text-gray-600 mt-1" />
+          <div>
+            <div className="font-semibold text-lg mb-1">
+              Bedroom {room.bedroomNumber}
+            </div>
+            {room.bedTypes && room.bedTypes.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {room.bedTypes.map((bedType, bedIdx) => (
+                  <span
+                    key={bedIdx}
+                    className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                  >
+                    {bedType}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <span className="text-sm text-gray-500 italic">
+                No bed type specified
+              </span>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+})}
+              </div>
+            </div>
+
+            <div className="border-b pb-6">
+              <h3 className="text-lg font-semibold mb-4">Living Rooms</h3>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             {property.livingroombedtypes?.map((room, index) => (
+  <Card key={`livingroom-${index}`} className="border">
+    <CardContent className="p-4">
+      <div className="flex items-start gap-5">
+        🛋️
+        <div>
+          <div className="font-semibold text-lg mb-1">
+            Living Room {room.livingRoomNumber}
+          </div>
+          {room.bedTypes.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(
+                room.bedTypes.reduce<Record<string, number>>((acc, bedType) => {
+                  acc[bedType] = (acc[bedType] || 0) + 1;
+                  return acc;
+                }, {})
+              ).map(([bedType, count]) => (
+                <span
+                  key={bedType}
+                  className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                >
+                  {count} × {bedType}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="text-sm text-gray-500 italic">
+              No sofa bed specified
+            </span>
+          )}
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+))}
+
               </div>
             </div>
 
@@ -791,7 +800,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             </div>
 
             {/* Cancellation Policy */}
-            <div>
+            <div className="pb-32" >
               <h3 className="text-lg font-semibold mb-2">Cancellation policy</h3>
               <ReactMarkdown>{property.cancellationPolicy}</ReactMarkdown>
               {/* <p className="text-gray-700">{property.cancellationPolicy}</p> */}
