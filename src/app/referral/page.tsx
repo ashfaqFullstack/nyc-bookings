@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
-// import { toast } from "sonner";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", agency: "", phone: "", email: "", message: "" });
@@ -43,10 +42,12 @@ export default function ContactPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-      toast.success("We have received your message! Thanks for Referring a guest to us.");
-      setForm({ name: "", agency: "", phone: "", email: "", message: ""  });
+      toast.success("We have received your message! Thanks for Referring a guest to us.", {
+        duration: 10000, // 10 seconds
+      });
+      setForm({ name: "", agency: "", phone: "", email: "", message: "" });
     } catch (error) {
-      toast.error('Error ocurred while sendin message!');
+      toast.error('Error occurred while sending message!');
     } finally {
       setLoading(false);
     }
@@ -55,17 +56,21 @@ export default function ContactPage() {
   return (
     <div className="max-w-xl my-[3%] mx-auto p-4">
       <Toaster
-          position="top-right"
-          reverseOrder={false}
-        />
+        position="top-right"
+        reverseOrder={false}
+      />
       <h1 className="text-2xl font-bold mb-4">Refer a Guest</h1>
+      {/* New text for the referral form */}
+      <p className="text-gray-700 mb-6 text-lg">
+        <b>Are you a travel agency?</b> Earn <b>8% commission</b> on the total booking price for every guest you refer! Simply share your information below—we'd love to partner with you and will follow up with more details soon.
+      </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Label htmlFor="name">Name</Label>
           <Input id="name" name="name" value={form.name} onChange={handleChange} required />
         </div>
         <div>
-          <Label htmlFor="agency">Travle Agency Name</Label>
+          <Label htmlFor="agency">Travel Agency Name</Label>
           <Input id="agency" name="agency" value={form.agency} onChange={handleChange} required />
         </div>
         <div>

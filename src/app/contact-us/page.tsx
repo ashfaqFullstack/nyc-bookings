@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-// import { toast } from "sonner";
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function ContactPage() {
@@ -40,16 +39,17 @@ export default function ContactPage() {
         body: JSON.stringify(form),
       });
 
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-      toast.success("We have received your message! We will contact you shortly.",{
-        duration: 10000, // 20 seconds
+      toast.success("We have received your message! We will contact you shortly.", {
+        duration: 10000, // 10 seconds
       });
       setForm({ name: "", email: "", message: "" });
     } catch (error) {
-      toast.error("Error Occured while Sending Message!",{
-        duration: 4000, // 20 seconds
+      toast.error("Error Occurred while Sending Message!", {
+        duration: 4000, // 4 seconds
       });
     } finally {
       setLoading(false);
@@ -59,10 +59,14 @@ export default function ContactPage() {
   return (
     <div className="max-w-xl my-[3%] mx-auto p-4">
       <Toaster
-          position="top-right"
-          reverseOrder={false}
-        />
+        position="top-right"
+        reverseOrder={false}
+      />
       <h1 className="text-2xl font-bold mb-4">Contact Us</h1>
+      {/* Added the new text here */}
+      <p className="text-gray-700 mb-6 text-lg">
+        Have a question or interested in a specific place? Reach out to us through the form below—we're here to help and will get back to you as soon as possible.
+      </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Label htmlFor="name">Name</Label>
