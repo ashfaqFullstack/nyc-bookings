@@ -69,7 +69,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   ALTER COLUMN cancellationpolicy SET NOT NULL
 `;
 
-console.log(livingrooms)
+console.log(livingrooms , livingroombedtypes)
 
 // await sql`
 //   ALTER TABLE properties

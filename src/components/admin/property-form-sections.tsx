@@ -196,8 +196,16 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
               onClick={()=>setBedMenu(!bedMenu)}
               value={property.bedrooms}
               onChange={(e) => {
-                updateProperty('bedrooms', Number.parseInt(e.target.value) || 0)
-              }}
+                  const newCount = Number.parseInt(e.target.value) || 0;
+
+                  updateProperty('bedrooms', newCount);
+
+                  // 🧹 Clean up bedroomBedTypes that exceed the new bedroom count
+                  if (property.bedroomBedTypes?.length) {
+                    const filtered = property.bedroomBedTypes.filter(b => b.bedroomNumber <= newCount);
+                    updateProperty('bedroomBedTypes', filtered);
+                  }
+                }}
             />
           {(property.bedrooms > 0  && bedMenu) && (
             <div className="space-y-3 absolute top-[45px] w-full !bg-white border-x-2 border-b-2 rounded-[8px] mt-4">
@@ -282,7 +290,15 @@ export function PropertyDetailsSection({ property, updateProperty }: SectionProp
             min={0}
             onClick={()=>setLivingMenu(!livingMenu)}
             value={property.livingrooms || 0}
-            onChange={(e) => updateProperty('livingrooms', parseInt(e.target.value))}
+            onChange={(e) => {
+              const newCount = parseInt(e.target.value);
+              updateProperty('livingrooms', newCount);
+
+              // Trim the livingroombedtypes array accordingly
+              updateProperty('livingroombedtypes', (property.livingroombedtypes || []).filter(
+                (room) => room.livingRoomNumber <= newCount
+              ));
+            }}
             // className="border px-2 py-1 rounded w-32"
           />
           <div className='bg-white absolute top-[60px] w-full' >

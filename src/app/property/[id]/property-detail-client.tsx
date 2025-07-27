@@ -477,7 +477,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
                 <div className="flex items-center">
                   <Star className="h-4 w-4 fill-black mr-1" />
                   <span className="font-medium">{property.rating}</span>
-                  <span className="text-gray-500 ml-1">({property.reviewCount} reviews)</span>
+                  <span className="text-gray-500 ml-1">({property.reviews.length} reviews)</span>
                 </div>
                 <span className="text-gray-500">•</span>
                 <span className="text-gray-600 underline">{property.location}</span>
@@ -536,7 +536,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
                <div className="flex items-center text-sm">
                   <Star className="h-4 w-4 fill-current text-black mr-1" />
                   <span className="font-medium">{property.rating}</span>
-                  <span className="text-gray-500 ml-1">({property.reviewCount} reviews)</span>
+                  <span className="text-gray-500 ml-1">({property.reviews.length} reviews)</span>
                   <span className="text-gray-500 mx-2">•</span>
                   <span className="text-gray-600 underline">{property.location}</span>
                </div>
@@ -712,7 +712,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
               <div className="flex items-center space-x-2 mb-6">
                 <Star className="h-5 w-5 fill-black" />
                 <span className="text-lg font-semibold">{property.rating}</span>
-                <span className="text-gray-500">({property.reviewCount} reviews)</span>
+                <span className="text-gray-500">({property.reviews.length} reviews)</span>
               </div>
 
               {property.reviews.length > 0 && (
@@ -817,7 +817,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
                 <div className="flex items-center">
                   <Star className="h-4 w-4 fill-black mr-1" />
                   <span>{property.rating}</span>
-                  <span className="text-gray-500 ml-1">({property.reviewCount})</span>
+                  <span className="text-gray-500 ml-1">({property.reviews.length})</span>
                 </div>
               </div>
               <Link href={`/book/${property.listing_id}`} passHref>
@@ -834,7 +834,7 @@ export default function PropertyDetailClient({ id }: PropertyDetailClientProps) 
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex items-center justify-between z-10">
         <div>
           <p className="font-bold text-lg">${property.price} <span className="font-normal text-base">/ night</span></p>
-          <p className="text-sm text-gray-500 underline">{property.reviewCount} reviews</p>
+          <p className="text-sm text-gray-500 underline">{property.reviews.length} reviews</p>
         </div>
         <Link href={`/book/${property.listing_id}`} >
           <Button className="bg-[#2575b8] hover:bg-[#2575b8]/80 text-white font-bold py-3 px-6 rounded-lg">
